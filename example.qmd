@@ -1,0 +1,1141 @@
+---
+title: "Offcanvas"
+subtitle: "Quarto Extension"
+author:
+  - name: "Mickaël CANOUIL, _Ph.D._"
+    orcid: "0000-0002-3396-4549"
+    url: "https://mickael.canouil.fr"
+date: today
+format:
+  html:
+    toc: true
+    code-tools: true
+    output-file: index
+filters:
+  - path: offcanvas
+    at: pre-quarto
+extensions:
+  offcanvas:
+    overtake-margins: true
+    placement: end
+    width: 450px
+    trigger-class: btn btn-sm btn-outline-info
+---
+
+This Quarto extension provides easy-to-use syntax for creating Bootstrap 5 offcanvas components in your HTML documents.
+
+Offcanvas components are sliding panels that can be triggered from buttons and appear from any edge of the viewport.
+
+## Installation
+
+```bash
+quarto add mcanouil/quarto-offcanvas
+```
+
+This will install the extension under the `_extensions` subdirectory.
+
+If you're using version control, you will want to check in this directory.
+
+## Usage
+
+To use offcanvas in your HTML Quarto document, you need to include the `offcanvas` extension in your YAML header.
+
+```yaml
+filters:
+  - path: offcanvas
+    at: pre-quarto
+```
+
+Offcanvas components are created using fenced divs with the `.offcanvas` class.
+
+```markdown
+:::: {.offcanvas}
+
+# Offcanvas Title
+
+Body content goes here.
+
+---
+
+Footer content goes here (optional).
+
+:::
+```
+
+## Options
+
+You can customise offcanvas components generally by setting options in the `extensions.offcanvas` section of your YAML header.
+
+```yaml
+extensions:
+  offcanvas:
+    placement: start|end|top|bottom|left|right
+    width: 400px
+    height: 30vh
+    backdrop: true|false|static
+    scroll: false|true
+    keyboard: true|false
+    trigger-text: Open
+    trigger-class: btn btn-primary
+    trigger-icon: ""
+    trigger-position: inline|none
+    trigger-type: button|text
+    show-close: true|false
+    responsive: ""|sm|md|lg|xl|xxl
+    overtake-margins: false|true
+```
+
+For more information about Bootstrap offcanvas components, see the [official Bootstrap documentation](https://getbootstrap.com/docs/5.3/components/offcanvas/).
+
+### Placement
+
+Offcanvas panels can be positioned on any edge of the viewport.
+
+#### Start (Left) Placement
+
+````markdown
+:::: {.offcanvas placement="start" trigger-text="Open from Left" trigger-position="inline"}
+
+# Left Panel
+
+This panel slides in from the left side of the screen.
+
+This is the default placement.
+
+:::
+````
+
+:::: {.offcanvas placement="start" trigger-text="Open from Left" trigger-position="inline"}
+
+# Left Panel
+
+This panel slides in from the left side of the screen.
+
+This is the default placement.
+
+:::
+
+#### End (Right) Placement
+
+````markdown
+:::: {.offcanvas placement="end" trigger-text="Open from Right" trigger-position="inline"}
+
+# Right Panel
+
+This panel slides in from the right side of the screen.
+
+Perfect for settings or additional information.
+
+:::
+````
+
+:::: {.offcanvas placement="end" trigger-text="Open from Right" trigger-position="inline"}
+
+# Right Panel
+
+This panel slides in from the right side of the screen.
+
+Perfect for settings or additional information.
+
+:::
+
+#### Top Placement
+
+````markdown
+:::: {.offcanvas placement="top" height="200px" trigger-text="Open from Top" trigger-position="inline"}
+
+# Top Panel
+
+This panel slides down from the top of the screen.
+
+Great for notifications or announcements.
+
+:::
+````
+
+:::: {.offcanvas placement="top" height="200px" trigger-text="Open from Top" trigger-position="inline"}
+
+# Top Panel
+
+This panel slides down from the top of the screen.
+
+Great for notifications or announcements.
+
+:::
+
+#### Bottom Placement
+
+````markdown
+:::: {.offcanvas placement="bottom" height="250px" trigger-text="Open from Bottom" trigger-position="inline"}
+
+# Bottom Panel
+
+This panel slides up from the bottom of the screen.
+
+Useful for cookie notices or supplementary information.
+
+:::
+````
+
+:::: {.offcanvas placement="bottom" height="250px" trigger-text="Open from Bottom" trigger-position="inline"}
+
+# Bottom Panel
+
+This panel slides up from the bottom of the screen.
+
+Useful for cookie notices or supplementary information.
+
+:::
+
+### Size
+
+#### Custom Width
+
+````markdown
+:::: {.offcanvas placement="start" width="500px" trigger-text="Wide Panel" trigger-position="inline"}
+
+# Wide Offcanvas
+
+This offcanvas is 500px wide instead of the default 400px.
+
+You can set any custom width value.
+
+:::
+````
+
+:::: {.offcanvas placement="start" width="500px" trigger-text="Wide Panel" trigger-position="inline"}
+
+# Wide Offcanvas
+
+This offcanvas is 500px wide instead of the default 400px.
+
+You can set any custom width value.
+
+:::
+
+#### Custom Height
+
+````markdown
+:::: {.offcanvas placement="top" height="40vh" trigger-text="Tall Top Panel" trigger-position="inline"}
+
+# Tall Top Panel
+
+This offcanvas uses viewport height units (40vh).
+
+You can use any CSS units: px, vh, %, rem, etc.
+
+:::
+````
+
+:::: {.offcanvas placement="top" height="40vh" trigger-text="Tall Top Panel" trigger-position="inline"}
+
+# Tall Top Panel
+
+This offcanvas uses viewport height units (40vh).
+
+You can use any CSS units: px, vh, %, rem, etc.
+
+:::
+
+### Trigger Button
+
+#### Custom Trigger Button
+
+````markdown
+:::: {.offcanvas trigger-text="Custom Button" trigger-class="btn btn-success" trigger-position="inline"}
+
+# Custom Styled Button
+
+The trigger button can be customised with Bootstrap classes.
+
+This example uses `btn btn-success` for a green button.
+
+:::
+````
+
+:::: {.offcanvas trigger-text="Custom Button" trigger-class="btn btn-success" trigger-position="inline"}
+
+# Custom Styled Button
+
+The trigger button can be customised with Bootstrap classes.
+
+This example uses `btn btn-success` for a green button.
+
+:::
+
+#### Trigger with Icon
+
+Note: Bootstrap Icons must be included in your document to display icons.
+
+````markdown
+:::: {.offcanvas trigger-text="Settings" trigger-icon="bi bi-gear" trigger-class="btn btn-outline-primary" trigger-position="inline"}
+
+# Settings Panel
+
+This offcanvas has a trigger button with a Bootstrap icon.
+
+:::
+````
+
+:::: {.offcanvas trigger-text="Settings" trigger-icon="bi bi-gear" trigger-class="btn btn-outline-primary" trigger-position="inline"}
+
+# Settings Panel
+
+This offcanvas has a trigger button with a Bootstrap icon.
+
+Make sure to include Bootstrap Icons in your document to see the icon.
+
+:::
+
+### Backdrop
+
+#### Default Backdrop
+
+````markdown
+:::: {.offcanvas trigger-text="With Backdrop" trigger-position="inline"}
+
+# Default Backdrop
+
+By default, clicking the backdrop closes the offcanvas.
+
+The page content behind is dimmed.
+
+:::
+````
+
+:::: {.offcanvas trigger-text="With Backdrop" trigger-position="inline"}
+
+# Default Backdrop
+
+By default, clicking the backdrop closes the offcanvas.
+
+The page content behind is dimmed.
+
+:::
+
+#### Static Backdrop
+
+````markdown
+:::: {.offcanvas backdrop="static" trigger-text="Static Backdrop" trigger-position="inline"}
+
+# Static Backdrop
+
+With a static backdrop, clicking outside does not close the offcanvas.
+
+You must use the close button or press Escape.
+
+:::
+````
+
+:::: {.offcanvas backdrop="static" trigger-text="Static Backdrop" trigger-position="inline"}
+
+# Static Backdrop
+
+With a static backdrop, clicking outside does not close the offcanvas.
+
+You must use the close button or press Escape.
+
+:::
+
+#### No Backdrop
+
+````markdown
+:::: {.offcanvas backdrop="false" trigger-text="No Backdrop" trigger-position="inline"}
+
+# No Backdrop
+
+This offcanvas appears without a backdrop.
+
+The page remains fully visible and interactive.
+
+:::
+````
+
+:::: {.offcanvas backdrop="false" trigger-text="No Backdrop" trigger-position="inline"}
+
+# No Backdrop
+
+This offcanvas appears without a backdrop.
+
+The page remains fully visible and interactive.
+
+:::
+
+### Scroll Behaviour
+
+#### Default (No Scroll)
+
+````markdown
+:::: {.offcanvas trigger-text="Default Scroll" trigger-position="inline"}
+
+# Default Scroll Behaviour
+
+By default, the page body scrolling is disabled when the offcanvas is open.
+
+This is the standard Bootstrap behaviour.
+
+:::
+````
+
+:::: {.offcanvas trigger-text="Default Scroll" trigger-position="inline"}
+
+# Default Scroll Behaviour
+
+By default, the page body scrolling is disabled when the offcanvas is open.
+
+This is the standard Bootstrap behaviour.
+
+:::
+
+#### Allow Body Scrolling
+
+````markdown
+:::: {.offcanvas scroll="true" backdrop="false" trigger-text="Allow Scrolling" trigger-position="inline"}
+
+# Body Scroll Allowed
+
+With `scroll="true"`, you can scroll the page whilst the offcanvas is open.
+
+This is often combined with `backdrop="false"` for a better experience.
+
+:::
+````
+
+:::: {.offcanvas scroll="true" backdrop="false" trigger-text="Allow Scrolling" trigger-position="inline"}
+
+# Body Scroll Allowed
+
+With `scroll="true"`, you can scroll the page whilst the offcanvas is open.
+
+This is often combined with `backdrop="false"` for a better experience.
+
+:::
+
+### Keyboard Support
+
+#### Default (Keyboard Enabled)
+
+````markdown
+:::: {.offcanvas trigger-text="With Keyboard" trigger-position="inline"}
+
+# Keyboard Support
+
+By default, pressing the Escape key closes the offcanvas.
+
+This improves accessibility.
+
+:::
+````
+
+:::: {.offcanvas trigger-text="With Keyboard" trigger-position="inline"}
+
+# Keyboard Support
+
+By default, pressing the Escape key closes the offcanvas.
+
+This improves accessibility.
+
+:::
+
+#### Keyboard Disabled
+
+````markdown
+:::: {.offcanvas keyboard="false" trigger-text="No Keyboard" trigger-position="inline"}
+
+# Keyboard Disabled
+
+With `keyboard="false"`, the Escape key will not close the offcanvas.
+
+Users must click the close button or backdrop.
+
+:::
+````
+
+:::: {.offcanvas keyboard="false" trigger-text="No Keyboard" trigger-position="inline"}
+
+# Keyboard Disabled
+
+With `keyboard="false"`, the Escape key will not close the offcanvas.
+
+Users must click the close button or backdrop.
+
+:::
+
+### Close Button
+
+#### With Close Button (Default)
+
+````markdown
+:::: {.offcanvas trigger-text="With Close Button" trigger-position="inline"}
+
+# Default Close Button
+
+By default, a close button appears in the header.
+
+:::
+````
+
+:::: {.offcanvas trigger-text="With Close Button" trigger-position="inline"}
+
+# Default Close Button
+
+By default, a close button appears in the header.
+
+:::
+
+#### Without Close Button
+
+````markdown
+:::: {.offcanvas show-close="false" trigger-text="No Close Button" trigger-position="inline"}
+
+# No Close Button
+
+You can hide the close button with `show-close="false"`.
+
+Users must click the backdrop or use the Escape key to close.
+
+:::
+````
+
+:::: {.offcanvas show-close="false" trigger-text="No Close Button" trigger-position="inline"}
+
+# No Close Button
+
+You can hide the close button with `show-close="false"`.
+
+Users must click the backdrop or use the Escape key to close.
+
+:::
+
+## Complex Content
+
+### Rich Content Example
+
+````markdown
+:::: {.offcanvas placement="end" width="450px" trigger-text="Resources" trigger-class="btn btn-info" trigger-position="inline"}
+
+# Learning Resources
+
+## Video Tutorials
+
+Watch our comprehensive video series covering:
+
+1. **Getting Started** (15 min).
+2. **Advanced Features** (25 min).
+3. **Best Practices** (20 min).
+
+## Code Examples
+
+```python
+# Quick start example
+import quarto
+
+# Render document
+quarto.render("document.qmd")
+```
+
+## Download Materials
+
+- Sample Files.
+- Templates.
+- Cheat Sheet.
+
+---
+
+For more information, visit our [documentation](https://quarto.org).
+
+:::
+````
+
+:::: {.offcanvas placement="end" width="450px" trigger-text="Resources" trigger-class="btn btn-info" trigger-position="inline"}
+
+# Learning Resources
+
+## Video Tutorials
+
+Watch our comprehensive video series covering:
+
+1. **Getting Started** (15 min).
+2. **Advanced Features** (25 min).
+3. **Best Practices** (20 min).
+
+## Code Examples
+
+```python
+# Quick start example
+import quarto
+
+# Render document
+quarto.render("document.qmd")
+```
+
+## Download Materials
+
+- Sample Files.
+- Templates.
+- Cheat Sheet.
+
+---
+
+For more information, visit our [documentation](https://quarto.org).
+
+:::
+
+### Navigation Menu
+
+````markdown
+:::: {.offcanvas placement="start" trigger-text="Menu" trigger-icon="bi bi-list" trigger-class="btn btn-dark" trigger-position="inline"}
+
+# Navigation
+
+## Main Sections
+
+- [Home](#introduction)
+- [Examples](#basic-usage)
+- [Documentation](#customisation-options)
+
+## External Links
+
+- [Quarto](https://quarto.org)
+- [Bootstrap](https://getbootstrap.com)
+
+---
+
+© 2025 Quarto Offcanvas Extension
+
+:::
+````
+
+:::: {.offcanvas placement="start" trigger-text="Menu" trigger-icon="bi bi-list" trigger-class="btn btn-dark" trigger-position="inline"}
+
+# Navigation
+
+## Main Sections
+
+- [Home](#introduction)
+- [Examples](#basic-usage)
+- [Documentation](#customisation-options)
+
+## External Links
+
+- [Quarto](https://quarto.org)
+- [Bootstrap](https://getbootstrap.com)
+
+---
+
+© 2025 Quarto Offcanvas Extension
+
+:::
+
+### Settings Panel
+
+````markdown
+:::: {.offcanvas placement="end" width="350px" trigger-text="Settings" trigger-icon="bi bi-gear-fill" trigger-position="inline"}
+
+# Preferences
+
+## Theme Settings
+
+- [ ] Dark mode
+- [ ] High contrast
+- [ ] Large fonts
+
+## Notifications
+
+- [x] Email alerts
+- [ ] Push notifications
+- [x] Weekly summaries
+
+## Privacy
+
+Configure your privacy settings to control data collection and usage.
+
+---
+
+[Save Settings](#){.btn .btn-primary}
+
+:::
+````
+
+:::: {.offcanvas placement="end" width="350px" trigger-text="Settings" trigger-icon="bi bi-gear-fill" trigger-position="inline"}
+
+# Preferences
+
+## Theme Settings
+
+- [ ] Dark mode
+- [ ] High contrast
+- [ ] Large fonts
+
+## Notifications
+
+- [x] Email alerts
+- [ ] Push notifications
+- [x] Weekly summaries
+
+## Privacy
+
+Configure your privacy settings to control data collection and usage.
+
+---
+
+[Save Settings](#){.btn .btn-primary}
+
+:::
+
+## Using Custom IDs
+
+You can assign custom IDs to offcanvas components for direct linking.
+
+````markdown
+:::: {#my-custom-offcanvas .offcanvas trigger-text="Custom ID" trigger-position="inline"}
+
+# Custom ID Example
+
+This offcanvas has a custom ID: `my-custom-offcanvas`.
+
+You can link to it directly with `#my-custom-offcanvas`.
+
+:::
+````
+
+:::: {#my-custom-offcanvas .offcanvas trigger-text="Custom ID" trigger-position="inline"}
+
+# Custom ID Example
+
+This offcanvas has a custom ID: `my-custom-offcanvas`.
+
+You can link to it directly with `#my-custom-offcanvas`.
+
+:::
+
+You can also create a custom trigger link: [Open Custom Offcanvas](#my-custom-offcanvas){bs-toggle="offcanvas"}.
+
+### Manual Trigger Control
+
+Set `trigger-position="none"` to disable automatic trigger generation and manage triggers yourself.
+
+````markdown
+:::: {#manual-offcanvas .offcanvas trigger-position="none"}
+
+# Manual Trigger
+
+This offcanvas has no automatic trigger.
+
+You can create custom triggers anywhere in your document.
+
+:::
+
+[Open Manual Offcanvas](#manual-offcanvas){bs-toggle="offcanvas"}
+````
+
+:::: {#manual-offcanvas .offcanvas trigger-position="none"}
+
+# Manual Trigger
+
+This offcanvas has no automatic trigger.
+
+You can create custom triggers anywhere in your document.
+
+:::
+
+You can create custom trigger links anywhere: [Open Manual Offcanvas](#manual-offcanvas){bs-toggle="offcanvas"}.
+
+### Placement Aliases
+
+You can use `"left"` as an alias for `"start"` and `"right"` as an alias for `"end"`.
+
+````markdown
+:::: {.offcanvas placement="left" trigger-text="From Left" trigger-position="inline"}
+
+# Left Placement
+
+This uses `placement="left"`, which is equivalent to `placement="start"`.
+
+:::
+````
+
+:::: {.offcanvas placement="left" trigger-text="From Left" trigger-position="inline"}
+
+# Left Placement
+
+This uses `placement="left"`, which is equivalent to `placement="start"`.
+
+:::
+
+````markdown
+:::: {.offcanvas placement="right" trigger-text="From Right" trigger-position="inline"}
+
+# Right Placement
+
+This uses `placement="right"`, which is equivalent to `placement="end"`.
+
+:::
+````
+
+:::: {.offcanvas placement="right" trigger-text="From Right" trigger-position="inline"}
+
+# Right Placement
+
+This uses `placement="right"`, which is equivalent to `placement="end"`.
+
+:::
+
+## Advanced Trigger Options
+
+### Text Trigger
+
+Use `trigger-type="text"` to create a plain text trigger instead of a button.
+
+````markdown
+:::: {.offcanvas trigger-type="text" trigger-text="Click this text" trigger-class="text-primary fw-bold" trigger-position="inline"}
+
+# Text Trigger
+
+This offcanvas is triggered by a text element rather than a button.
+
+:::
+````
+
+:::: {.offcanvas trigger-type="text" trigger-text="Click this text" trigger-class="text-primary fw-bold" trigger-position="inline"}
+
+# Text Trigger
+
+This offcanvas is triggered by a text element rather than a button.
+
+:::
+
+### Trigger Without CSS Classes
+
+Use `trigger-class="none"` or `trigger-class=""` to create a trigger with no CSS classes.
+
+````markdown
+:::: {.offcanvas trigger-class="none" trigger-text="Plain Trigger" trigger-position="inline"}
+
+# No CSS Classes
+
+This trigger has no CSS classes applied, allowing complete custom styling.
+
+:::
+````
+
+:::: {.offcanvas trigger-class="none" trigger-text="Plain Trigger" trigger-position="inline"}
+
+# No CSS Classes
+
+This trigger has no CSS classes applied, allowing complete custom styling.
+
+:::
+
+### Overriding Document Defaults
+
+You can override document-level defaults on individual offcanvas components.
+
+````markdown
+:::: {.offcanvas trigger-class="" trigger-text="Override Default" trigger-position="inline"}
+
+# Override Default Classes
+
+This offcanvas overrides the document-level `trigger-class` setting by using an empty string.
+
+:::
+````
+
+:::: {.offcanvas trigger-class="" trigger-text="Override Default" trigger-position="inline"}
+
+# Override Default Classes
+
+This offcanvas overrides the document-level `trigger-class` setting by using an empty string.
+
+:::
+
+## Title Override
+
+The `title` attribute overrides the first heading in the content.
+
+````markdown
+:::: {.offcanvas title="Overridden Title" trigger-text="Title Override" trigger-position="inline"}
+
+# This Header Will Be Ignored
+
+The title attribute overrides the first header in the content.
+
+The actual title shown is "Overridden Title".
+
+:::
+````
+
+:::: {.offcanvas title="Overridden Title" trigger-text="Title Override" trigger-position="inline"}
+
+# This Header Will Be Ignored
+
+The title attribute overrides the first header in the content.
+
+The actual title shown is "Overridden Title".
+
+:::
+
+## Footer Example
+
+You can add a footer section by using a horizontal rule.
+
+````markdown
+:::: {.offcanvas placement="end" trigger-text="With Footer" trigger-position="inline"}
+
+# Panel with Footer
+
+This is the main body content of the offcanvas.
+
+---
+
+**Footer Section**
+
+[Action Button](#){.btn .btn-primary}
+[Cancel](#){.btn .btn-secondary bs-dismiss="offcanvas"}
+
+:::
+````
+
+:::: {.offcanvas placement="end" trigger-text="With Footer" trigger-position="inline"}
+
+# Panel with Footer
+
+This is the main body content of the offcanvas.
+
+---
+
+**Footer Section**
+
+[Action Button](#){.btn .btn-primary}
+[Cancel](#){.btn .btn-secondary bs-dismiss="offcanvas"}
+
+:::
+
+## Responsive Offcanvas
+
+````markdown
+:::: {.offcanvas responsive="lg" placement="end" trigger-text="Responsive Panel" trigger-position="inline"}
+
+# Responsive Offcanvas
+
+This offcanvas is responsive.
+
+It behaves differently based on the screen size using Bootstrap's responsive utilities.
+
+:::
+````
+
+:::: {.offcanvas responsive="lg" placement="end" trigger-text="Responsive Panel" trigger-position="inline"}
+
+# Responsive Offcanvas
+
+This offcanvas is responsive.
+
+It behaves differently based on the screen size using Bootstrap's responsive utilities.
+
+:::
+
+## Best Practices
+
+### Accessibility
+
+- Always include a descriptive title (first heading).
+- Use semantic HTML in your content.
+- Keep content concise and scannable.
+- Test with keyboard navigation.
+
+### Performance
+
+- Avoid placing too many offcanvas components on a single page.
+- Keep offcanvas content lightweight.
+- Use lazy loading for images if needed.
+
+### User Experience
+
+- Use appropriate placement (e.g., settings on the right, navigation on the left).
+- Consider mobile users (top/bottom placements work well on mobile).
+- Provide clear trigger buttons with descriptive text.
+- Use icons to enhance visual communication.
+
+## Configuration via Metadata
+
+You can set default values for all offcanvas components in the document metadata:
+
+````yaml
+---
+title: "My Document"
+format: html
+extensions:
+  offcanvas:
+    placement: end
+    width: 450px
+    trigger-class: btn btn-outline-secondary
+---
+````
+
+These defaults apply to all offcanvas components unless overridden by individual attributes.
+
+## Margin Overtake Feature
+
+The extension includes an optional feature to automatically convert Quarto margin content into offcanvas components.
+
+This is particularly useful for making margin notes mobile-friendly.
+
+:::: {.callout-note}
+The margin overtake feature is enabled in this document to demonstrate the examples below.
+
+The feature is disabled by default. To enable it, set `overtake-margins: true` in the document metadata under `extensions.offcanvas`.
+:::
+
+### How It Works
+
+When enabled, any content marked for the margin (using `.column-margin` or `.aside` classes) is automatically converted to an offcanvas panel with a trigger button placed in the margin.
+
+The trigger button text is extracted from the first 30 characters of the margin content, unless overridden with the `trigger-text` attribute.
+
+All standard offcanvas attributes are supported on margin elements (placement, width, height, backdrop, scroll, keyboard, trigger-class, trigger-icon, title, show-close).
+
+### Configuration
+
+Enable margin overtake in your document metadata:
+
+````yaml
+---
+format: html
+extensions:
+  offcanvas:
+    overtake-margins: true
+    placement: end
+    width: 450px
+    trigger-class: btn btn-sm btn-outline-secondary
+---
+````
+
+### Basic Margin Conversion
+
+Standard margin content is automatically converted:
+
+````markdown
+:::: {.column-margin}
+This is a margin note that will be converted to an offcanvas.
+:::
+````
+
+:::: {.column-margin}
+This is a margin note that will be converted to an offcanvas.
+
+The trigger button appears in the margin with auto-extracted text.
+:::
+
+### Custom Trigger Text
+
+Override the auto-extracted trigger text:
+
+````markdown
+:::: {.column-margin trigger-text="View details"}
+This content has a custom trigger button text.
+:::
+````
+
+:::: {.column-margin trigger-text="View details"}
+This content has a custom trigger button text instead of auto-extracted text.
+:::
+
+### Custom Title
+
+Customise the offcanvas header title:
+
+````markdown
+:::: {.column-margin trigger-text="Additional Info" title="Supplementary Information"}
+This margin note has both custom trigger text and a custom title.
+:::
+````
+
+:::: {.column-margin trigger-text="Additional Info" title="Supplementary Information"}
+This margin note has both custom trigger text and a custom title.
+
+Open the offcanvas to see the custom title "Supplementary Information" in the header.
+:::
+
+### Using Aside Class
+
+The `.aside` class also works:
+
+````markdown
+:::: {.aside}
+This content uses the aside class.
+:::
+````
+
+:::: {.aside}
+This content uses the `.aside` class instead of `.column-margin`, but it works the same way.
+:::
+
+### Complex Margin Content
+
+Margin content can include any markdown:
+
+````markdown
+:::: {.column-margin}
+### Example Code
+
+```python
+def hello():
+    print("Hello!")
+```
+
+**Key points:**
+
+1. Functions should be documented.
+2. Use meaningful names.
+:::
+````
+
+:::: {.column-margin}
+### Example Code
+
+Here's a code snippet:
+
+```python
+def hello():
+    print("Hello from margin!")
+```
+
+**Key points:**
+
+1. Functions should be documented.
+2. Use meaningful names.
+3. Follow style guidelines.
+:::
+
+### Custom Placement and Width
+
+Override default settings per margin element:
+
+````markdown
+:::: {.column-margin placement="start" width="500px"}
+This margin note appears from the left side and is wider.
+:::
+````
+
+:::: {.column-margin placement="start" width="500px"}
+This margin note appears from the left side (start) and is wider (500px) than the default.
+:::
+
+### Benefits
+
+- **Mobile-friendly**: Margin content becomes accessible on all screen sizes.
+- **Space-saving**: Keeps the main content area clean and focused.
+- **Interactive**: Users choose when to view supplementary information.
+- **Consistent**: All margin content uses uniform offcanvas styling.
+
+## Summary
+
+The Quarto Offcanvas extension provides a simple, powerful way to add Bootstrap offcanvas components to your documents:
+
+- **Easy syntax**: Use familiar Quarto div syntax.
+- **Flexible configuration**: Control placement, size, behaviour, and styling.
+- **Accessible**: Built on Bootstrap's accessible components.
+- **Customisable**: Override defaults per component or document-wide.
+
+For more information and advanced usage, refer to the [GitHub repository](https://github.com/mcanouil/quarto-offcanvas).
