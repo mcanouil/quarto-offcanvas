@@ -1,0 +1,18 @@
+/**
+ * Offcanvas Footer Styling
+ *
+ * Bootstrap 5 doesn't provide a .offcanvas-footer class by default.
+ * This CSS ensures the footer has similar styling to .offcanvas-body
+ * while keeping it positioned at the bottom of the offcanvas panel.
+ */
+
+.offcanvas-footer {
+  /* Match the padding of .offcanvas-body for consistency */
+  padding: var(--bs-offcanvas-padding-y) var(--bs-offcanvas-padding-x);
+
+  /* Position at the bottom */
+  margin-top: auto;
+
+  /* Add a subtle border to separate from body content */
+  border-top: var(--bs-border-width) solid var(--bs-border-color);
+}
