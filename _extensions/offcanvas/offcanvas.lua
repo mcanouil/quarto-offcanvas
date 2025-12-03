@@ -488,6 +488,15 @@ end
 -- FILTER EXPORT
 -- ============================================================================
 
+--- Initialise offcanvas CSS dependency
+if quarto.doc.is_format('html:js') and quarto.doc.has_bootstrap() then
+  utils.ensure_html_dependency({
+    name = 'quarto-offcanvas',
+    version = '1.0.0',
+    stylesheets = { 'offcanvas.css' }
+  })
+end
+
 return {
   { Meta = get_offcanvas_meta },
   { Div = process_div },
