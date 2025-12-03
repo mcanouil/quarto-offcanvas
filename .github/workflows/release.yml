@@ -25,7 +25,6 @@ jobs:
     secrets: inherit
     with:
       gh-app-id: ${{ vars.APP_ID }}
-      gh-app-id: ${{ vars.APP_ID }}
       version: "${{ github.event.inputs.version }}"
       formats: "html"
       tinytex: false
