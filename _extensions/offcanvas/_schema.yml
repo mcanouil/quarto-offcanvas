@@ -1,0 +1,130 @@
+# Schema for the offcanvas extension
+# Provides configuration validation and IDE support for options
+# and element attributes.
+
+options:
+  placement:
+    type: string
+    default: "start"
+    enum: [start, end, top, bottom]
+    enum-case-insensitive: true
+    description: "Default placement of the offcanvas panel. Aliases 'left' and 'right' are normalised to 'start' and 'end'."
+  width:
+    type: string
+    default: "400px"
+    description: "Width of the offcanvas panel (for start/end placement)."
+    completion:
+      type: size
+  height:
+    type: string
+    default: "30vh"
+    description: "Height of the offcanvas panel (for top/bottom placement)."
+    completion:
+      type: size
+  backdrop:
+    type: string
+    default: "true"
+    enum: ["true", "false", static]
+    description: "Backdrop behaviour. Set to 'static' for a non-dismissible backdrop, 'false' to disable."
+  scroll:
+    type: boolean
+    default: false
+    description: "Allow body scrolling while the offcanvas panel is open."
+  keyboard:
+    type: boolean
+    default: true
+    description: "Allow closing the offcanvas panel with the Escape key."
+  trigger-text:
+    type: string
+    default: "Open"
+    description: "Default text for the trigger button."
+  trigger-class:
+    type: string
+    default: "btn btn-primary"
+    description: "CSS classes for the trigger button."
+  trigger-icon:
+    type: string
+    default: ""
+    description: "Icon class for the trigger button (e.g. Bootstrap Icons class)."
+  trigger-position:
+    type: string
+    default: "inline"
+    enum: [inline, none]
+    enum-case-insensitive: true
+    description: "Trigger button position. Set to 'none' to hide the default trigger."
+  trigger-type:
+    type: string
+    default: "button"
+    enum: [button, text]
+    description: "HTML element type for the trigger."
+  show-close:
+    type: boolean
+    default: true
+    description: "Show the close button in the offcanvas header."
+  responsive:
+    type: string
+    default: ""
+    enum: ["", sm, md, lg, xl, xxl]
+    enum-case-insensitive: true
+    description: "Responsive breakpoint below which the offcanvas behaviour activates."
+  overtake-margins:
+    type: boolean
+    default: false
+    description: "Convert margin content (column-margin, aside, margin classes) to offcanvas panels."
+
+element-attributes:
+  offcanvas:
+    placement:
+      type: string
+      enum: [start, end, top, bottom]
+      enum-case-insensitive: true
+      description: "Placement override for this offcanvas panel."
+    width:
+      type: string
+      description: "Width override (for start/end placement)."
+      completion:
+        type: size
+    height:
+      type: string
+      description: "Height override (for top/bottom placement)."
+      completion:
+        type: size
+    backdrop:
+      type: string
+      enum: ["true", "false", static]
+      description: "Backdrop behaviour override."
+    scroll:
+      type: boolean
+      description: "Allow body scrolling while this panel is open."
+    keyboard:
+      type: boolean
+      description: "Allow closing this panel with the Escape key."
+    trigger-text:
+      type: string
+      description: "Trigger button text override."
+    trigger-class:
+      type: string
+      description: "CSS classes for the trigger button."
+    trigger-icon:
+      type: string
+      description: "Icon class for the trigger button."
+    trigger-position:
+      type: string
+      enum: [inline, none]
+      enum-case-insensitive: true
+      description: "Trigger button position."
+    trigger-type:
+      type: string
+      enum: [button, text]
+      description: "HTML element type for the trigger."
+    show-close:
+      type: boolean
+      description: "Show the close button in the header."
+    responsive:
+      type: string
+      enum: ["", sm, md, lg, xl, xxl]
+      enum-case-insensitive: true
+      description: "Responsive breakpoint override."
+    title:
+      type: string
+      description: "Override the header title extracted from content."
