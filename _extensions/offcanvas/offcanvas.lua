@@ -19,6 +19,7 @@ local VALID_TRIGGER_POSITIONS = { inline = true, none = true }
 --- Load required modules
 local utils = require(quarto.utils.resolve_path('_modules/utils.lua'):gsub('%.lua$', ''))
 local content = require(quarto.utils.resolve_path('_modules/content-extraction.lua'):gsub('%.lua$', ''))
+local schema = require(quarto.utils.resolve_path('_modules/schema.lua'):gsub('%.lua$', ''))
 
 --- Generate unique offcanvas ID
 --- @type integer Counter for unique offcanvas IDs
@@ -70,6 +71,8 @@ end
 --- @param meta table Document metadata table
 --- @return table Updated metadata table with offcanvas configuration
 local function get_offcanvas_meta(meta)
+  schema.validate_options(meta, EXTENSION_NAME, quarto.utils.resolve_path('_schema.yml'))
+
   for key, _ in pairs(offcanvas_settings_meta) do
     local option_value = get_offcanvas_option(key, meta)
     offcanvas_settings_meta[key] = option_value
