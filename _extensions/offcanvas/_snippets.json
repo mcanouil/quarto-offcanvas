@@ -1,15 +1,15 @@
 {
-	"Basic offcanvas": {
-		"prefix": "offcanvas",
-		"body": [
-			":::: {.offcanvas}",
-			"",
-			"# ${1:Panel Title}",
-			"",
-			"${2:Panel content.}",
-			"",
-			"::::"
-		],
-		"description": "Create a basic offcanvas panel"
-	}
+  "Basic offcanvas": {
+    "prefix": "offcanvas",
+    "body": [
+      "::: {.offcanvas}",
+      "",
+      "# ${1:Panel Title}",
+      "",
+      "${2:Panel content.}",
+      "",
+      ":::"
+    ],
+    "description": "Create a basic offcanvas panel"
+  }
 }
