@@ -11,18 +11,5 @@
 			"::::"
 		],
 		"description": "Create a basic offcanvas panel"
-	},
-	"Offcanvas with placement": {
-		"prefix": "offcanvas-placed",
-		"body": [
-			":::: {.offcanvas placement=\"${1:end}\" width=\"${2:400px}\" trigger-text=\"${3:Open}\"}",
-			"",
-			"# ${4:Panel Title}",
-			"",
-			"${5:Panel content.}",
-			"",
-			"::::"
-		],
-		"description": "Create an offcanvas panel with placement and width"
 	}
 }
