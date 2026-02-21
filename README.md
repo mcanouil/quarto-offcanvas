@@ -7,7 +7,7 @@ Offcanvas components are sliding panels that can be triggered from buttons and a
 ## Installation
 
 ```bash
-quarto add mcanouil/quarto-offcanvas@1.1.0
+quarto add mcanouil/quarto-offcanvas@1.1.1
 ```
 
 This will install the extension under the `_extensions` subdirectory.
