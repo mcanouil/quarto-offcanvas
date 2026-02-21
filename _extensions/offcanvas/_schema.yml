@@ -1,6 +1,6 @@
 # Schema for the offcanvas extension
 # Provides configuration validation and IDE support for options
-# and element attributes.
+# and attributes.
 
 $schema: https://m.canouil.dev/quarto-wizard/assets/schema/v1/extension-schema.json
 
@@ -74,7 +74,7 @@ options:
     default: false
     description: "Convert margin content (column-margin, aside, margin classes) to offcanvas panels."
 
-element-attributes:
+attributes:
   offcanvas:
     placement:
       type: string
@@ -130,3 +130,7 @@ element-attributes:
     title:
       type: string
       description: "Override the header title extracted from content."
+
+classes:
+  offcanvas:
+    description: "Off-canvas panel container."
