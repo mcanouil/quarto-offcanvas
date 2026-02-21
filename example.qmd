@@ -29,7 +29,7 @@ Offcanvas components are sliding panels that can be triggered from buttons and a
 ## Installation
 
 ```bash
-quarto add mcanouil/quarto-offcanvas@1.0.2
+quarto add mcanouil/quarto-offcanvas@1.1.0
 ```
 
 This will install the extension under the `_extensions` subdirectory.
@@ -1138,4 +1138,4 @@ The Quarto Offcanvas extension provides a simple, powerful way to add Bootstrap 
 - **Accessible**: Built on Bootstrap's accessible components.
 - **Customisable**: Override defaults per component or document-wide.
 
-For more information and advanced usage, refer to the [GitHub repository](https://github.com/mcanouil/quarto-offcanvas@1.0.2).
+For more information and advanced usage, refer to the [GitHub repository](https://github.com/mcanouil/quarto-offcanvas@1.1.0).
