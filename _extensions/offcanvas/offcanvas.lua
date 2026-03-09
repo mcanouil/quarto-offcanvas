@@ -59,8 +59,9 @@ local offcanvas_settings_meta = {
 --- @param meta table Document metadata table
 --- @return string The option value as a string
 local function get_offcanvas_option(key, meta)
-  if meta['extensions'] and meta['extensions']['offcanvas'] and meta['extensions']['offcanvas'][key] then
-    return utils.stringify(meta['extensions']['offcanvas'][key])
+  local meta_value = utils.get_metadata_value(meta, 'offcanvas', key)
+  if not utils.is_empty(meta_value) then
+    return meta_value
   end
 
   return offcanvas_settings_meta[key] or ''
