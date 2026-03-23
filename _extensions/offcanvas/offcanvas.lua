@@ -17,7 +17,11 @@ local VALID_RESPONSIVE = { sm = true, md = true, lg = true, xl = true, xxl = tru
 local VALID_TRIGGER_POSITIONS = { inline = true, none = true }
 
 --- Load required modules
-local utils = require(quarto.utils.resolve_path('_modules/utils.lua'):gsub('%.lua$', ''))
+local str = require(quarto.utils.resolve_path('_modules/string.lua'):gsub('%.lua$', ''))
+local log = require(quarto.utils.resolve_path('_modules/logging.lua'):gsub('%.lua$', ''))
+local meta_mod = require(quarto.utils.resolve_path('_modules/metadata.lua'):gsub('%.lua$', ''))
+local pdoc = require(quarto.utils.resolve_path('_modules/pandoc-helpers.lua'):gsub('%.lua$', ''))
+local html_mod = require(quarto.utils.resolve_path('_modules/html.lua'):gsub('%.lua$', ''))
 local content = require(quarto.utils.resolve_path('_modules/content-extraction.lua'):gsub('%.lua$', ''))
 
 --- Generate unique offcanvas ID
@@ -59,8 +63,8 @@ local offcanvas_settings_meta = {
 --- @param meta table Document metadata table
 --- @return string The option value as a string
 local function get_offcanvas_option(key, meta)
-  local meta_value = utils.get_metadata_value(meta, 'offcanvas', key)
-  if not utils.is_empty(meta_value) then
+  local meta_value = meta_mod.get_metadata_value(meta, 'offcanvas', key)
+  if not str.is_empty(meta_value) then
     return meta_value
   end
 
@@ -173,7 +177,7 @@ local function generate_offcanvas_structure(config)
     if VALID_RESPONSIVE[responsive] then
       table.insert(offcanvas_classes, 'offcanvas-' .. responsive)
     else
-      utils.log_warning(EXTENSION_NAME, 'Invalid responsive breakpoint "' .. responsive .. '". Ignoring.')
+      log.log_warning(EXTENSION_NAME, 'Invalid responsive breakpoint "' .. responsive .. '". Ignoring.')
     end
   end
 
@@ -201,20 +205,20 @@ local function generate_offcanvas_structure(config)
     )
   end
 
-  local offcanvas_header = pandoc.Div(header_blocks, utils.attr('', { 'offcanvas-header' }))
+  local offcanvas_header = pandoc.Div(header_blocks, pdoc.attr('', { 'offcanvas-header' }))
 
-  local offcanvas_body = pandoc.Div(body_blocks, utils.attr('', { 'offcanvas-body' }))
+  local offcanvas_body = pandoc.Div(body_blocks, pdoc.attr('', { 'offcanvas-body' }))
 
   local offcanvas_content = { offcanvas_header, offcanvas_body }
 
   if footer_blocks and #footer_blocks > 0 then
-    local offcanvas_footer = pandoc.Div(footer_blocks, utils.attr('', { 'offcanvas-footer' }))
+    local offcanvas_footer = pandoc.Div(footer_blocks, pdoc.attr('', { 'offcanvas-footer' }))
     table.insert(offcanvas_content, offcanvas_footer)
   end
 
   local offcanvas_div = pandoc.Div(
     offcanvas_content,
-    utils.attr(offcanvas_id, offcanvas_classes, offcanvas_attrs)
+    pdoc.attr(offcanvas_id, offcanvas_classes, offcanvas_attrs)
   )
 
   local style_attr = ''
@@ -284,7 +288,7 @@ end
 --- @param el pandoc.Div Pandoc Div element
 --- @return pandoc.Div|pandoc.Null Pandoc Div structure for offcanvas, or Null if not applicable
 local function process_offcanvas(el)
-  if not quarto.doc.is_format('html:js') or not quarto.doc.has_bootstrap() or not utils.has_class(el.classes, 'offcanvas') then
+  if not quarto.doc.is_format('html:js') or not quarto.doc.has_bootstrap() or not pdoc.has_class(el.classes, 'offcanvas') then
     return el
   end
 
@@ -308,7 +312,7 @@ local function process_offcanvas(el)
   placement = normalise_placement(placement)
 
   if not VALID_PLACEMENTS[placement] then
-    utils.log_warning(EXTENSION_NAME, 'Invalid placement "' .. placement .. '". Using "start".')
+    log.log_warning(EXTENSION_NAME, 'Invalid placement "' .. placement .. '". Using "start".')
     placement = 'start'
   end
 
@@ -336,7 +340,7 @@ local function process_offcanvas(el)
   })
 
   if not VALID_TRIGGER_POSITIONS[trigger_position] then
-    utils.log_warning(EXTENSION_NAME, 'Invalid trigger-position "' .. trigger_position .. '". Using "inline".')
+    log.log_warning(EXTENSION_NAME, 'Invalid trigger-position "' .. trigger_position .. '". Using "inline".')
     trigger_position = 'inline'
   end
 
@@ -368,9 +372,9 @@ local function convert_margin_to_offcanvas(el)
     return el
   end
 
-  local is_margin = utils.has_class(el.classes, 'column-margin') or
-      utils.has_class(el.classes, 'aside') or
-      utils.has_class(el.classes, 'margin')
+  local is_margin = pdoc.has_class(el.classes, 'column-margin') or
+      pdoc.has_class(el.classes, 'aside') or
+      pdoc.has_class(el.classes, 'margin')
 
   if not is_margin then
     return el
@@ -396,7 +400,7 @@ local function convert_margin_to_offcanvas(el)
   if not trigger_text or trigger_text == '' then
     trigger_text = 'View margin content'
     if el.content and #el.content > 0 then
-      local first_text = utils.stringify(el.content):sub(1, MAX_TEXT_EXTRACT)
+      local first_text = str.stringify(el.content):sub(1, MAX_TEXT_EXTRACT)
       if first_text and first_text ~= '' then
         if #first_text > MAX_TRIGGER_LENGTH then
           trigger_text = first_text:sub(1, TRUNCATE_LENGTH) .. '...'
@@ -435,7 +439,7 @@ local function convert_margin_to_offcanvas(el)
 
   local trigger_div = pandoc.Div(
     { pandoc.RawBlock('html', trigger_html) },
-    utils.attr('', margin_classes)
+    pdoc.attr('', margin_classes)
   )
 
   return pandoc.Div({
@@ -452,7 +456,7 @@ end
 --- @param el pandoc.Div Pandoc Div element
 --- @return pandoc.Div|pandoc.Null Processed element
 local function process_div(el)
-  if utils.has_class(el.classes, 'offcanvas') then
+  if pdoc.has_class(el.classes, 'offcanvas') then
     return process_offcanvas(el)
   end
 
@@ -465,7 +469,7 @@ end
 
 --- Initialise offcanvas CSS dependency
 if quarto.doc.is_format('html:js') and quarto.doc.has_bootstrap() then
-  utils.ensure_html_dependency({
+  html_mod.ensure_html_dependency({
     name = 'quarto-offcanvas',
     version = '1.0.0',
     stylesheets = { 'offcanvas.css' }
