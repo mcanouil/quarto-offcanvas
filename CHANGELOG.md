@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Refactoring
+
+- refactor: Synchronise shared module (`logging.lua`) with canonical version.
+
+### Documentation
+
+- docs: Remove version pinning from GitHub URL in example.
+
 ## 1.2.0 (2026-03-23)
 
 ### Refactoring
