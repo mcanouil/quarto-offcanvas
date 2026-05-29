@@ -29,7 +29,7 @@ Offcanvas components are sliding panels that can be triggered from buttons and a
 ## Installation
 
 ```bash
-quarto add mcanouil/quarto-offcanvas@1.2.1
+quarto add mcanouil/quarto-offcanvas@1.3.0
 ```
 
 This will install the extension under the `_extensions` subdirectory.
@@ -80,8 +80,11 @@ extensions:
     trigger-icon: ""
     trigger-position: inline|none
     trigger-type: button|text
+    trigger-style: ""
     show-close: true|false
     responsive: ""|sm|md|lg|xl|xxl
+    animation: ""|none|fast|normal|slow
+    auto-dismiss: ""
     overtake-margins: false|true
 ```
 
@@ -934,6 +937,130 @@ This offcanvas is responsive.
 It behaves differently based on the screen size using Bootstrap's responsive utilities.
 
 :::
+
+## Animation Presets
+
+Use the `animation` attribute to tune the slide-in/out transition duration.
+
+The supported presets are `none` (0ms), `fast` (150ms), `normal` (300ms), and `slow` (500ms).
+
+The chosen preset is applied via the `--bs-offcanvas-transition-duration` CSS custom property, so it inherits Bootstrap's easing curve.
+
+````markdown
+:::: {.offcanvas animation="fast" trigger-text="Fast slide" trigger-position="inline"}
+
+# Fast slide
+
+This panel uses the `fast` animation preset.
+
+:::
+````
+
+:::: {.offcanvas animation="fast" trigger-text="Fast slide" trigger-position="inline"}
+
+# Fast slide
+
+This panel uses the `fast` animation preset (150 ms).
+
+:::
+
+````markdown
+:::: {.offcanvas animation="slow" trigger-text="Slow slide" trigger-position="inline"}
+
+# Slow slide
+
+This panel uses the `slow` animation preset.
+
+:::
+````
+
+:::: {.offcanvas animation="slow" trigger-text="Slow slide" trigger-position="inline"}
+
+# Slow slide
+
+This panel uses the `slow` animation preset (500 ms).
+
+:::
+
+## Auto-dismiss Timeout
+
+Use the `auto-dismiss` attribute (in milliseconds) to automatically close the offcanvas after it has been shown.
+
+The timer is cancelled if the user dismisses the panel earlier.
+
+````markdown
+:::: {.offcanvas auto-dismiss="3000" trigger-text="Auto-dismiss in 3 s" trigger-position="inline"}
+
+# Auto-dismiss
+
+This panel closes itself 3 seconds after opening.
+
+:::
+````
+
+:::: {.offcanvas auto-dismiss="3000" trigger-text="Auto-dismiss in 3 s" trigger-position="inline"}
+
+# Auto-dismiss
+
+This panel closes itself 3 seconds after opening.
+
+::::
+
+## Custom Trigger Template
+
+Nest a child div with class `.offcanvas-trigger` to use arbitrary markdown as the trigger content.
+
+This replaces the `trigger-text` and `trigger-icon` attributes for the panel.
+
+````markdown
+:::: {.offcanvas trigger-class="btn btn-outline-primary" trigger-position="inline"}
+
+:::{.offcanvas-trigger}
+**Open** the panel for *details* `now`.
+:::
+
+# Custom trigger template
+
+The trigger content above came from a `.offcanvas-trigger` child div.
+
+::::
+````
+
+:::: {.offcanvas trigger-class="btn btn-outline-primary" trigger-position="inline"}
+
+:::{.offcanvas-trigger}
+**Open** the panel for *details* `now`.
+:::
+
+# Custom trigger template
+
+The trigger content above came from a `.offcanvas-trigger` child div.
+
+::::
+
+## Custom Trigger Inline Style
+
+Use the `trigger-style` attribute to add inline CSS to the trigger element.
+
+For text triggers, your style is merged with the built-in `cursor: pointer;` hint rather than replacing it.
+
+````markdown
+:::: {.offcanvas trigger-type="text" trigger-text="Styled text trigger" trigger-class="fw-bold" trigger-style="color: teal; text-decoration: underline;" trigger-position="inline"}
+
+# Styled text trigger
+
+The trigger keeps the pointer cursor and your custom colour and underline.
+
+::::
+````
+
+:::: {.offcanvas trigger-type="text" trigger-text="Styled text trigger" trigger-class="fw-bold" trigger-style="color: teal; text-decoration: underline;" trigger-position="inline"}
+
+# Styled text trigger
+
+The trigger keeps the pointer cursor and your custom colour and underline.
+
+::::
 
 ## Best Practices
 

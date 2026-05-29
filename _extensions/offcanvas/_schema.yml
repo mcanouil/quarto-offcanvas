@@ -59,6 +59,10 @@ options:
     default: "button"
     enum: [button, text]
     description: "HTML element type for the trigger."
+  trigger-style:
+    type: string
+    default: ""
+    description: "Inline CSS for the trigger element (merged with the built-in cursor hint on text triggers)."
   show-close:
     type: boolean
     default: true
@@ -69,6 +73,16 @@ options:
     enum: ["", sm, md, lg, xl, xxl]
     enum-case-insensitive: true
     description: "Responsive breakpoint below which the offcanvas behaviour activates."
+  animation:
+    type: string
+    default: ""
+    enum: ["", none, fast, normal, slow]
+    enum-case-insensitive: true
+    description: "Slide transition preset. Empty leaves the Bootstrap default; 'none' disables animation."
+  auto-dismiss:
+    type: string
+    default: ""
+    description: "Auto-close the panel after the given delay (positive integer, milliseconds). Empty disables."
   overtake-margins:
     type: boolean
     default: false
@@ -119,6 +133,9 @@ attributes:
       type: string
       enum: [button, text]
       description: "HTML element type for the trigger."
+    trigger-style:
+      type: string
+      description: "Inline CSS for the trigger element override."
     show-close:
       type: boolean
       description: "Show the close button in the header."
@@ -127,6 +144,14 @@ attributes:
       enum: ["", sm, md, lg, xl, xxl]
       enum-case-insensitive: true
       description: "Responsive breakpoint override."
+    animation:
+      type: string
+      enum: ["", none, fast, normal, slow]
+      enum-case-insensitive: true
+      description: "Slide transition preset override."
+    auto-dismiss:
+      type: string
+      description: "Auto-close delay override (positive integer, milliseconds)."
     title:
       type: string
       description: "Override the header title extracted from content."
@@ -134,3 +159,5 @@ attributes:
 classes:
   offcanvas:
     description: "Off-canvas panel container."
+  offcanvas-trigger:
+    description: "Child div whose content becomes the custom trigger element for the enclosing offcanvas."
