@@ -253,6 +253,35 @@ local function ensure_js_helper()
   })
 end
 
+--- Validate shared offcanvas options and resolve derived behaviours.
+--- Warns and coerces invalid `backdrop` and `trigger_type` values, resolves the
+--- animation preset and auto-dismiss timeout, and registers the JS helper when
+--- an auto-dismiss timeout is set.
+--- @param opts table Mutable options table with `backdrop`, `trigger_type`, `animation`, `auto_dismiss` keys
+--- @return string|nil animation_duration, integer|nil auto_dismiss_ms
+local function validate_and_resolve_options(opts)
+  if not VALID_BACKDROPS[opts.backdrop] then
+    log.log_warning(EXTENSION_NAME,
+      'Invalid backdrop "' .. opts.backdrop .. '". Expected "true", "false", or "static". Using "true".')
+    opts.backdrop = 'true'
+  end
+
+  if not VALID_TRIGGER_TYPES[opts.trigger_type] then
+    log.log_warning(EXTENSION_NAME,
+      'Invalid trigger-type "' .. opts.trigger_type .. '". Expected "button" or "text". Using "button".')
+    opts.trigger_type = 'button'
+  end
+
+  local animation_duration = resolve_animation(opts.animation)
+  local auto_dismiss_ms = parse_auto_dismiss(opts.auto_dismiss)
+
+  if auto_dismiss_ms then
+    ensure_js_helper()
+  end
+
+  return animation_duration, auto_dismiss_ms
+end
+
 -- ============================================================================
 -- OFFCANVAS STRUCTURE GENERATION
 -- ============================================================================
@@ -496,24 +525,15 @@ local function process_offcanvas(el)
     placement = 'start'
   end
 
-  if not VALID_BACKDROPS[backdrop] then
-    log.log_warning(EXTENSION_NAME,
-      'Invalid backdrop "' .. backdrop .. '". Expected "true", "false", or "static". Using "true".')
-    backdrop = 'true'
-  end
-
-  if not VALID_TRIGGER_TYPES[trigger_type] then
-    log.log_warning(EXTENSION_NAME,
-      'Invalid trigger-type "' .. trigger_type .. '". Expected "button" or "text". Using "button".')
-    trigger_type = 'button'
-  end
-
-  local animation_duration = resolve_animation(animation)
-  local auto_dismiss_ms = parse_auto_dismiss(auto_dismiss)
-
-  if auto_dismiss_ms then
-    ensure_js_helper()
-  end
+  local opts = {
+    backdrop = backdrop,
+    trigger_type = trigger_type,
+    animation = animation,
+    auto_dismiss = auto_dismiss
+  }
+  local animation_duration, auto_dismiss_ms = validate_and_resolve_options(opts)
+  backdrop = opts.backdrop
+  trigger_type = opts.trigger_type
 
   local body_blocks_in, trigger_template = extract_trigger_template(el.content)
   local parsed = content.parse_sections(body_blocks_in)
@@ -607,24 +627,15 @@ local function convert_margin_to_offcanvas(el)
 
   placement = normalise_placement(placement)
 
-  if not VALID_BACKDROPS[backdrop] then
-    log.log_warning(EXTENSION_NAME,
-      'Invalid backdrop "' .. backdrop .. '". Expected "true", "false", or "static". Using "true".')
-    backdrop = 'true'
-  end
-
-  if not VALID_TRIGGER_TYPES[trigger_type] then
-    log.log_warning(EXTENSION_NAME,
-      'Invalid trigger-type "' .. trigger_type .. '". Expected "button" or "text". Using "button".')
-    trigger_type = 'button'
-  end
-
-  local animation_duration = resolve_animation(animation)
-  local auto_dismiss_ms = parse_auto_dismiss(auto_dismiss)
-
-  if auto_dismiss_ms then
-    ensure_js_helper()
-  end
+  local opts = {
+    backdrop = backdrop,
+    trigger_type = trigger_type,
+    animation = animation,
+    auto_dismiss = auto_dismiss
+  }
+  local animation_duration, auto_dismiss_ms = validate_and_resolve_options(opts)
+  backdrop = opts.backdrop
+  trigger_type = opts.trigger_type
 
   local trigger_text = el.attributes['trigger-text']
   if not trigger_text or trigger_text == '' then
