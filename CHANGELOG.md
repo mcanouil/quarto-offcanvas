@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.3.0 (2026-05-31)
+
 ### New Features
 
 - feat: Add `animation` attribute with `none`, `fast`, `normal`, and `slow` presets driving `--bs-offcanvas-transition-duration`.
