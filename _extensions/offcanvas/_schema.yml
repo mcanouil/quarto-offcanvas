@@ -2,14 +2,14 @@
 # Provides configuration validation and IDE support for options
 # and attributes.
 
-$schema: https://m.canouil.dev/quarto-wizard/assets/schema/v1/extension-schema.json
+$schema: https://m.canouil.dev/quarto-wizard/assets/schema/v2/extension-schema.json
 
 options:
   placement:
     type: string
     default: "start"
     enum: [start, end, top, bottom]
-    enum-case-insensitive: true
+    enumCaseInsensitive: true
     description: "Default placement of the offcanvas panel. Aliases 'left' and 'right' are normalised to 'start' and 'end'."
   width:
     type: string
@@ -52,7 +52,7 @@ options:
     type: string
     default: "inline"
     enum: [inline, none]
-    enum-case-insensitive: true
+    enumCaseInsensitive: true
     description: "Trigger button position. Set to 'none' to hide the default trigger."
   trigger-type:
     type: string
@@ -71,13 +71,13 @@ options:
     type: string
     default: ""
     enum: ["", sm, md, lg, xl, xxl]
-    enum-case-insensitive: true
+    enumCaseInsensitive: true
     description: "Responsive breakpoint below which the offcanvas behaviour activates."
   animation:
     type: string
     default: ""
     enum: ["", none, fast, normal, slow]
-    enum-case-insensitive: true
+    enumCaseInsensitive: true
     description: "Slide transition preset. Empty leaves the Bootstrap default; 'none' disables animation."
   auto-dismiss:
     type: string
@@ -93,7 +93,7 @@ attributes:
     placement:
       type: string
       enum: [start, end, top, bottom]
-      enum-case-insensitive: true
+      enumCaseInsensitive: true
       description: "Placement override for this offcanvas panel."
     width:
       type: string
@@ -127,7 +127,7 @@ attributes:
     trigger-position:
       type: string
       enum: [inline, none]
-      enum-case-insensitive: true
+      enumCaseInsensitive: true
       description: "Trigger button position."
     trigger-type:
       type: string
@@ -142,12 +142,12 @@ attributes:
     responsive:
       type: string
       enum: ["", sm, md, lg, xl, xxl]
-      enum-case-insensitive: true
+      enumCaseInsensitive: true
       description: "Responsive breakpoint override."
     animation:
       type: string
       enum: ["", none, fast, normal, slow]
-      enum-case-insensitive: true
+      enumCaseInsensitive: true
       description: "Slide transition preset override."
     auto-dismiss:
       type: string
