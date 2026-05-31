@@ -2,14 +2,14 @@
 # Provides configuration validation and IDE support for options
 # and attributes.
 
-$schema: https://m.canouil.dev/quarto-wizard/assets/schema/v1/extension-schema.json
+$schema: https://m.canouil.dev/quarto-wizard/assets/schema/v2/extension-schema.json
 
 options:
   placement:
     type: string
     default: "start"
     enum: [start, end, top, bottom]
-    enum-case-insensitive: true
+    enumCaseInsensitive: true
     description: "Default placement of the offcanvas panel. Aliases 'left' and 'right' are normalised to 'start' and 'end'."
   width:
     type: string
@@ -52,13 +52,17 @@ options:
     type: string
     default: "inline"
     enum: [inline, none]
-    enum-case-insensitive: true
+    enumCaseInsensitive: true
     description: "Trigger button position. Set to 'none' to hide the default trigger."
   trigger-type:
     type: string
     default: "button"
     enum: [button, text]
     description: "HTML element type for the trigger."
+  trigger-style:
+    type: string
+    default: ""
+    description: "Inline CSS for the trigger element (merged with the built-in cursor hint on text triggers)."
   show-close:
     type: boolean
     default: true
@@ -67,8 +71,18 @@ options:
     type: string
     default: ""
     enum: ["", sm, md, lg, xl, xxl]
-    enum-case-insensitive: true
+    enumCaseInsensitive: true
     description: "Responsive breakpoint below which the offcanvas behaviour activates."
+  animation:
+    type: string
+    default: ""
+    enum: ["", none, fast, normal, slow]
+    enumCaseInsensitive: true
+    description: "Slide transition preset. Empty leaves the Bootstrap default; 'none' disables animation."
+  auto-dismiss:
+    type: string
+    default: ""
+    description: "Auto-close the panel after the given delay (positive integer, milliseconds). Empty disables."
   overtake-margins:
     type: boolean
     default: false
@@ -79,7 +93,7 @@ attributes:
     placement:
       type: string
       enum: [start, end, top, bottom]
-      enum-case-insensitive: true
+      enumCaseInsensitive: true
       description: "Placement override for this offcanvas panel."
     width:
       type: string
@@ -113,20 +127,31 @@ attributes:
     trigger-position:
       type: string
       enum: [inline, none]
-      enum-case-insensitive: true
+      enumCaseInsensitive: true
       description: "Trigger button position."
     trigger-type:
       type: string
       enum: [button, text]
       description: "HTML element type for the trigger."
+    trigger-style:
+      type: string
+      description: "Inline CSS for the trigger element override."
     show-close:
       type: boolean
       description: "Show the close button in the header."
     responsive:
       type: string
       enum: ["", sm, md, lg, xl, xxl]
-      enum-case-insensitive: true
+      enumCaseInsensitive: true
       description: "Responsive breakpoint override."
+    animation:
+      type: string
+      enum: ["", none, fast, normal, slow]
+      enumCaseInsensitive: true
+      description: "Slide transition preset override."
+    auto-dismiss:
+      type: string
+      description: "Auto-close delay override (positive integer, milliseconds)."
     title:
       type: string
       description: "Override the header title extracted from content."
@@ -134,3 +159,5 @@ attributes:
 classes:
   offcanvas:
     description: "Off-canvas panel container."
+  offcanvas-trigger:
+    description: "Child div whose content becomes the custom trigger element for the enclosing offcanvas."
