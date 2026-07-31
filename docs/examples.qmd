@@ -1,0 +1,201 @@
+---
+title: "Examples"
+subtitle: "Panels you can open."
+description: "Working offcanvas panels built by the extension, one per attribute, with the source alongside each."
+---
+
+Every trigger below opens a panel built by the extension as this page was rendered.
+
+The site sets these defaults in `_quarto.yml`, and the panels below override them:
+
+```yaml
+extensions:
+  offcanvas:
+    placement: end
+    width: 420px
+    trigger-class: btn btn-outline-primary
+```
+
+## From each edge
+
+`placement` decides the edge, and `left` and `right` are aliases of `start` and `end`.
+
+:::: {.offcanvas placement="start" trigger-text="From the start"}
+
+# From the start
+
+`placement="start"`, which is the left edge in a left-to-right document.
+
+::::
+
+:::: {.offcanvas placement="end" trigger-text="From the end"}
+
+# From the end
+
+`placement="end"`, the site default.
+
+::::
+
+:::: {.offcanvas placement="top" height="220px" trigger-text="From the top"}
+
+# From the top
+
+`placement="top"` with `height="220px"`, since a top panel is sized by height rather than width.
+
+::::
+
+:::: {.offcanvas placement="bottom" height="220px" trigger-text="From the bottom"}
+
+# From the bottom
+
+`placement="bottom"`, again sized by `height`.
+
+::::
+
+```markdown
+:::: {.offcanvas placement="start" trigger-text="From the start"}
+:::: {.offcanvas placement="top" height="220px" trigger-text="From the top"}
+```
+
+## A panel with a footer
+
+A horizontal rule separates the footer from the body.
+
+:::: {.offcanvas trigger-text="With a footer" width="480px"}
+
+# Details
+
+The body of the panel, written as ordinary markdown.
+
+---
+
+[Save](#){.btn .btn-primary}
+[Cancel](#){.btn .btn-secondary bs-dismiss="offcanvas"}
+
+::::
+
+````markdown
+:::: {.offcanvas trigger-text="With a footer" width="480px"}
+
+# Details
+
+The body.
+
+---
+
+[Save](#){.btn .btn-primary}
+[Cancel](#){.btn .btn-secondary bs-dismiss="offcanvas"}
+
+::::
+````
+
+## Backdrop, scrolling, and the keyboard
+
+:::: {.offcanvas backdrop="static" keyboard="false" trigger-text="Static backdrop"}
+
+# Static backdrop
+
+`backdrop="static"` keeps this open when the backdrop is clicked, and `keyboard="false"` stops <kbd>Esc</kbd> closing it.
+The close button is the way out.
+
+::::
+
+:::: {.offcanvas backdrop="false" scroll="true" trigger-text="No backdrop"}
+
+# No backdrop
+
+`backdrop="false"` and `scroll="true"`, so the page behind stays readable and scrollable.
+
+::::
+
+## Triggers
+
+`trigger-type="text"` produces a span rather than a button, and `trigger-style` adds inline CSS to it.
+
+:::: {.offcanvas trigger-type="text" trigger-text="A text trigger" trigger-class="text-primary" trigger-style="text-decoration: underline;"}
+
+# A text trigger
+
+The built-in `cursor: pointer` is kept alongside the style above rather than replaced by it.
+
+::::
+
+A `.offcanvas-trigger` child supplies arbitrary markdown instead, and wins over `trigger-text`:
+
+:::: {.offcanvas}
+
+::: {.offcanvas-trigger}
+**Open** the panel for *details*.
+:::
+
+# A custom trigger
+
+The trigger above came from a nested `.offcanvas-trigger` div.
+
+::::
+
+With `trigger-position="none"` no trigger is written, and you place your own:
+
+:::: {#manual-panel .offcanvas trigger-position="none"}
+
+# A panel with no trigger of its own
+
+Opened from a link elsewhere in the document.
+
+::::
+
+[Open the manual panel](#manual-panel){bs-toggle="offcanvas"}
+
+```markdown
+:::: {#manual-panel .offcanvas trigger-position="none"}
+# A panel with no trigger of its own
+::::
+
+[Open the manual panel](#manual-panel){bs-toggle="offcanvas"}
+```
+
+## Animation and auto-dismiss
+
+:::: {.offcanvas animation="fast" trigger-text="Fast slide"}
+
+# Fast slide
+
+`animation="fast"`, so the panel slides in over 150 milliseconds.
+
+::::
+
+:::: {.offcanvas auto-dismiss="3000" trigger-text="Closes itself"}
+
+# Closes itself
+
+`auto-dismiss="3000"`, so this closes three seconds after it opened.
+Dismissing it sooner cancels the timer.
+
+::::
+
+## Margin content
+
+Quarto's margin notes are invisible on a narrow screen.
+Setting `overtake-margins` turns each of them into a panel, with its trigger left in the margin:
+
+```yaml
+extensions:
+  offcanvas:
+    overtake-margins: true
+    placement: end
+    width: 450px
+```
+
+The trigger text comes from the first thirty characters of the margin content, unless `trigger-text` overrides it:
+
+```markdown
+::: {.column-margin trigger-text="View details" title="Additional information"}
+The margin note.
+:::
+```
+
+This site leaves the option off, so its own margin content stays in the margin.
+
+## Source
+
+The repository ships a short, standalone starting point you can copy: [`example.qmd`](https://github.com/mcanouil/quarto-offcanvas/blob/main/example.qmd).

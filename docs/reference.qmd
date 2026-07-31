@@ -1,0 +1,147 @@
+---
+title: "Reference"
+subtitle: "Every attribute the offcanvas extension accepts."
+description: "The complete offcanvas configuration: the panel div, every attribute with its default, the trigger options, margin overtaking, and Bootstrap's version requirements."
+---
+
+## Enabling the filter
+
+```yaml
+filters:
+  - path: offcanvas
+    at: pre-quarto
+```
+
+## The panel
+
+A fenced div with the `.offcanvas` class becomes a panel.
+
+```markdown
+:::: {.offcanvas placement="end" width="450px" trigger-text="Settings"}
+
+# Settings
+
+The body.
+
+---
+
+The footer.
+
+::::
+```
+
+| Part | Comes from |
+| --- | --- |
+| Title | The first heading, or the `title` attribute. |
+| Body | Everything up to the first horizontal rule. |
+| Footer | Everything after it, when there is one. |
+| Trigger | Written by the extension, unless `trigger-position="none"`. |
+
+: How the div is divided. {.striped .hover tbl-colwidths="[16,84]"}
+
+## Panel attributes
+
+| Attribute | Type | Default | Description |
+| --- | --- | --- | --- |
+| `placement` | string | `start` | Which edge it slides from: `start`, `end`, `top`, `bottom`. `left` and `right` are aliases for the first two. |
+| `width` | size | `400px` | Width, for `start` and `end`. |
+| `height` | size | `30vh` | Height, for `top` and `bottom`. |
+| `backdrop` | string | `true` | `true`, `false`, or `static` for a backdrop that does not dismiss. |
+| `scroll` | boolean | `false` | Whether the page behind can still scroll. |
+| `keyboard` | boolean | `true` | Whether <kbd>Esc</kbd> closes it. |
+| `show-close` | boolean | `true` | Whether the header carries a close button. |
+| `title` | string | first heading | Overrides the title. |
+| `responsive` | string | | A breakpoint, `sm` to `xxl`: the panel behaves as an offcanvas below it and as ordinary content above. |
+| `animation` | string | | `none`, `fast`, `normal`, or `slow`, being 0, 150, 300, and 500 milliseconds. |
+| `auto-dismiss` | integer | | Closes the panel this many milliseconds after it opens. Cancelled if the reader closes it first. |
+
+: Attributes accepted on an `.offcanvas` div. {.striped .hover tbl-colwidths="[15,10,12,63]"}
+
+## Trigger attributes
+
+| Attribute | Type | Default | Description |
+| --- | --- | --- | --- |
+| `trigger-text` | string | `Open` | The trigger's text. |
+| `trigger-class` | string | `btn btn-primary` | Its CSS classes. `none` or an empty string removes them all. |
+| `trigger-icon` | string | | An icon class, such as a Bootstrap Icons name, drawn before the text. |
+| `trigger-type` | string | `button` | `button`, or `text` for a plain span. |
+| `trigger-style` | string | | Inline CSS. On a text trigger it is merged with the built-in `cursor: pointer`, not replacing it. |
+| `trigger-position` | string | `inline` | `inline`, or `none` to write the trigger yourself. |
+
+: Attributes controlling the trigger. {.striped .hover tbl-colwidths="[17,10,16,57]"}
+
+### A trigger of your own
+
+Nest a `.offcanvas-trigger` div to use arbitrary markdown as the trigger, which takes precedence over `trigger-text` and `trigger-icon`:
+
+```markdown
+:::: {.offcanvas}
+
+::: {.offcanvas-trigger}
+**Open** the panel for *details*.
+:::
+
+# The panel
+
+::::
+```
+
+Or suppress the trigger and place your own anywhere in the document:
+
+```markdown
+:::: {#my-panel .offcanvas trigger-position="none"}
+# The panel
+::::
+
+[Open it](#my-panel){bs-toggle="offcanvas"}
+```
+
+## Document-wide defaults
+
+Every attribute above works as document or project metadata, where it becomes the default for all panels:
+
+```yaml
+extensions:
+  offcanvas:
+    placement: end
+    width: 450px
+    trigger-class: btn btn-outline-secondary
+```
+
+An attribute on a panel overrides the default for that panel alone.
+
+## Overtaking margin content
+
+Quarto's margin notes are invisible on a narrow screen.
+With `overtake-margins`, every `.column-margin` and `.aside` element becomes an offcanvas panel with its trigger in the margin.
+
+```yaml
+extensions:
+  offcanvas:
+    overtake-margins: true
+    placement: end
+    width: 450px
+```
+
+The trigger text is taken from the first thirty characters of the margin content unless `trigger-text` says otherwise, and every panel attribute above works on a margin element too.
+
+## Bootstrap versions
+
+| Feature | Needs |
+| --- | --- |
+| The offcanvas component | Bootstrap 5.0 |
+| `responsive` breakpoints | Bootstrap 5.2 |
+| `animation` presets | Bootstrap 5.3, which provides `--bs-offcanvas-transition-duration` |
+
+: Version requirements. {.striped .hover tbl-colwidths="[40,60]"}
+
+Quarto ships Bootstrap 5.3, so all three apply.
+On Bootstrap 4 and earlier the extension produces nothing, since the component does not exist.
+
+The breakpoints follow Bootstrap's own: 576, 768, 992, 1200, and 1400 pixels.
+
+## Limitations
+
+- HTML with Bootstrap 5 only.
+- A panel takes its title from a heading or the `title` attribute; without either the header is empty.
+- `auto-dismiss` is measured from the moment the panel opens, not from the page load.
