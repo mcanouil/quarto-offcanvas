@@ -8,7 +8,7 @@ A fenced div becomes the panel, its first heading becomes the title, and the tri
 ## Installation
 
 ```bash
-quarto add mcanouil/quarto-offcanvas@1.3.1
+quarto add mcanouil/quarto-offcanvas@1.3.2
 ```
 
 This will install the extension under the `_extensions` subdirectory.
