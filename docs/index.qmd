@@ -39,8 +39,7 @@ Enable the filter:
 
 ```yaml
 filters:
-  - path: offcanvas
-    at: pre-quarto
+  - offcanvas
 ```
 
 Then write the panel:
