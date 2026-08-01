@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.3.2 (2026-08-01)
+
 ### Bug Fixes
 
 - fix: Register the filter at `pre-quarto` in the extension manifest, so listing `offcanvas` under `filters` is enough and the entry point no longer has to be named in project or document YAML.
