@@ -110,10 +110,27 @@ extensions:
 
 An attribute on a panel overrides the default for that panel alone.
 
+::: {.callout-important}
+## Quote `false` in metadata
+
+A value written as the YAML boolean `false` is read as unset, and the built-in default applies instead.
+Write it as a string:
+
+```yaml
+extensions:
+  offcanvas:
+    keyboard: "false"
+    show-close: "false"
+    backdrop: "false"
+```
+
+Attributes on a div are strings already, so `keyboard="false"` needs nothing extra.
+:::
+
 ## Overtaking margin content
 
 Quarto's margin notes are invisible on a narrow screen.
-With `overtake-margins`, every `.column-margin` and `.aside` element becomes an offcanvas panel with its trigger in the margin.
+With `overtake-margins`, every `.column-margin`, `.aside`, and `.margin` element becomes an offcanvas panel with its trigger in the margin.
 
 ```yaml
 extensions:
@@ -130,8 +147,8 @@ The trigger text is taken from the first thirty characters of the margin content
 | Feature | Needs |
 | --- | --- |
 | The offcanvas component | Bootstrap 5.0 |
-| `responsive` breakpoints | Bootstrap 5.2 |
-| `animation` presets | Bootstrap 5.3, which provides `--bs-offcanvas-transition-duration` |
+| `responsive` breakpoints | Bootstrap 5.2, which adds the `.offcanvas-{breakpoint}` classes |
+| `animation` presets | Bootstrap 5.0, since the duration is written inline on the panel |
 
 : Version requirements. {.striped .hover tbl-colwidths="[40,60]"}
 

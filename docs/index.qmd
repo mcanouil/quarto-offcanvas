@@ -73,7 +73,7 @@ HTML formats carrying Bootstrap 5, which is Quarto's default `html` and its webs
 
 ::: {.callout-note}
 Bootstrap 4 and earlier have no offcanvas component, and the extension produces nothing there.
-The responsive breakpoints need Bootstrap 5.2, and the animation presets 5.3; Quarto ships 5.3.
+The responsive breakpoints need Bootstrap 5.2; Quarto ships 5.3.
 :::
 
 ## Links
