@@ -8,8 +8,7 @@ description: "The complete offcanvas configuration: the panel div, every attribu
 
 ```yaml
 filters:
-  - path: offcanvas
-    at: pre-quarto
+  - offcanvas
 ```
 
 ## The panel
