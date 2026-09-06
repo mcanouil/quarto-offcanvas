@@ -32,12 +32,28 @@ local ANIMATION_PRESETS = {
 }
 
 --- Load required modules
-local str = require(quarto.utils.resolve_path('_modules/string.lua'):gsub('%.lua$', ''))
-local log = require(quarto.utils.resolve_path('_modules/logging.lua'):gsub('%.lua$', ''))
-local meta_mod = require(quarto.utils.resolve_path('_modules/metadata.lua'):gsub('%.lua$', ''))
-local pdoc = require(quarto.utils.resolve_path('_modules/pandoc-helpers.lua'):gsub('%.lua$', ''))
-local html_mod = require(quarto.utils.resolve_path('_modules/html.lua'):gsub('%.lua$', ''))
-local content = require(quarto.utils.resolve_path('_modules/content-extraction.lua'):gsub('%.lua$', ''))
+local str = require(quarto.utils.resolve_path('_vendor/quarto-lua-modules/string.lua'):gsub('%.lua$', ''))
+local log = require(quarto.utils.resolve_path('_vendor/quarto-lua-modules/logging.lua'):gsub('%.lua$', ''))
+local meta_mod = require(quarto.utils.resolve_path('_vendor/quarto-lua-modules/metadata.lua'):gsub('%.lua$', ''))
+local pdoc = require(quarto.utils.resolve_path('_vendor/quarto-lua-modules/pandoc-helpers.lua'):gsub('%.lua$', ''))
+local html_mod = require(quarto.utils.resolve_path('_vendor/quarto-lua-modules/html.lua'):gsub('%.lua$', ''))
+local content = require(quarto.utils.resolve_path('_vendor/quarto-lua-modules/content-extraction.lua'):gsub('%.lua$', ''))
+local schema = require(quarto.utils.resolve_path('_vendor/quarto-wizard/schema.lua'):gsub('%.lua$', ''))
+local check = require(quarto.utils.resolve_path('_vendor/quarto-lua-modules/schema-check.lua'):gsub('%.lua$', ''))
+
+--- The schema check, built once and reused for the whole document. It reads
+--- `_schema.yml` on the way in and checks the document configuration once.
+---
+--- The validator is injected rather than required by the check module, so the
+--- two vendored sources stay independent of where the other was placed.
+---
+--- The extension contributes a filter and no shortcode, so the check runs from
+--- the `Meta` pass, before the first option is read. There is nowhere else it
+--- could run.
+---
+--- A schema that cannot be read is reported by the module as an error and the
+--- render carries on: a configuration file must not stop a document.
+local checker = check.new(schema, EXTENSION_NAME)
 
 --- Counter for unique offcanvas IDs (reset per document in the Meta pass).
 local offcanvas_count = 0
@@ -101,6 +117,8 @@ end
 local function get_offcanvas_meta(meta)
   offcanvas_count = 0
   js_helper_added = false
+
+  checker:options(meta)
 
   for key, _ in pairs(offcanvas_settings_defaults) do
     offcanvas_settings[key] = get_offcanvas_option(key, meta)
