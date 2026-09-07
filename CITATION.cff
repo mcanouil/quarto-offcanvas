@@ -9,5 +9,5 @@ authors:
 repository-code: "https://github.com/mcanouil/quarto-offcanvas"
 url: "http://m.canouil.dev/quarto-offcanvas/"
 license: "MIT"
-date-released: "2026-08-01"
-version: 1.3.2
+date-released: "2026-09-07"
+version: 1.4.0
