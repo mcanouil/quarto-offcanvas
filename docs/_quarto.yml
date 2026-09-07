@@ -20,9 +20,15 @@ website:
   title: "Offcanvas"
   description: "A Quarto filter that turns a fenced div into a Bootstrap offcanvas panel, with its own trigger."
   # No trailing slash: Quarto builds the social image URL by concatenating this
-  # with a leading-slash image path, without normalising.
+  # with the image path, without normalising.
   site-url: &site-url https://m.canouil.dev/quarto-offcanvas
   repo-url: https://github.com/mcanouil/quarto-offcanvas
+  open-graph:
+    image: assets/social/og-image.png
+    image-alt: "The quarto-offcanvas social card: the extension name and the \"filter\" badge over the line \"Create elegant sliding panels for sidebars and menus\", beside a dark code window showing document.qmd."
+  twitter-card:
+    image: assets/social/og-image.png
+    image-alt: "The quarto-offcanvas social card: the extension name and the \"filter\" badge over the line \"Create elegant sliding panels for sidebars and menus\", beside a dark code window showing document.qmd."
   # The Quarto project root is docs/, so the repository links need the
   # subdirectory the pages actually live in; without it every "Edit this page"
   # and "Report an issue" link points at the repository root and 404s.
