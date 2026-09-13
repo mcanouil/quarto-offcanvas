@@ -34,7 +34,6 @@ local ANIMATION_PRESETS = {
 --- Load required modules
 local str = require(quarto.utils.resolve_path('_vendor/quarto-lua-modules/string.lua'):gsub('%.lua$', ''))
 local log = require(quarto.utils.resolve_path('_vendor/quarto-lua-modules/logging.lua'):gsub('%.lua$', ''))
-local meta_mod = require(quarto.utils.resolve_path('_vendor/quarto-lua-modules/metadata.lua'):gsub('%.lua$', ''))
 local pdoc = require(quarto.utils.resolve_path('_vendor/quarto-lua-modules/pandoc-helpers.lua'):gsub('%.lua$', ''))
 local html_mod = require(quarto.utils.resolve_path('_vendor/quarto-lua-modules/html.lua'):gsub('%.lua$', ''))
 local content = require(quarto.utils.resolve_path('_vendor/quarto-lua-modules/content-extraction.lua'):gsub('%.lua$', ''))
@@ -98,17 +97,22 @@ local offcanvas_settings_defaults = {
 --- @type table<string, string>
 local offcanvas_settings = {}
 
---- Get offcanvas option from metadata
+--- Get offcanvas option from the schema-resolved configuration.
+--- The value comes from the schema rather than from the document text, so
+--- `scroll: no` reads as `false` here. Reading the document itself left every
+--- spelling but `true` and `false` meaning nothing.
+--- The rest of the filter compares these as strings, and writes them back into
+--- the metadata for a panel to override, so the resolved value is stringified
+--- rather than carried as a boolean.
+--- It must be called after `checker:options`, which resolves the values.
 --- @param key string The option name to retrieve
---- @param meta table Document metadata table
 --- @return string The option value as a string
-local function get_offcanvas_option(key, meta)
-  local meta_value = meta_mod.get_metadata_value(meta, 'offcanvas', key)
-  if not str.is_empty(meta_value) then
-    return meta_value
+local function get_offcanvas_option(key)
+  local value = checker:option(key)
+  if value == nil then
+    return offcanvas_settings_defaults[key] or ''
   end
-
-  return offcanvas_settings_defaults[key] or ''
+  return tostring(value)
 end
 
 --- Reset per-document state and load settings from document metadata.
@@ -121,7 +125,7 @@ local function get_offcanvas_meta(meta)
   checker:options(meta)
 
   for key, _ in pairs(offcanvas_settings_defaults) do
-    offcanvas_settings[key] = get_offcanvas_option(key, meta)
+    offcanvas_settings[key] = get_offcanvas_option(key)
   end
 
   meta['extensions'] = meta['extensions'] or {}
