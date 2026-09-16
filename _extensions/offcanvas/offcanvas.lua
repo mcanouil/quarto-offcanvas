@@ -122,16 +122,21 @@ local function get_offcanvas_meta(meta)
   offcanvas_count = 0
   js_helper_added = false
 
-  checker:options(meta)
+  -- The extension only acts on html:js with Bootstrap available, and
+  -- `get_offcanvas_option` requires `checker:options` to have run first, so
+  -- the whole block it feeds is gated the same way.
+  if quarto.doc.is_format('html:js') and quarto.doc.has_bootstrap() then
+    checker:options(meta)
 
-  for key, _ in pairs(offcanvas_settings_defaults) do
-    offcanvas_settings[key] = get_offcanvas_option(key)
-  end
+    for key, _ in pairs(offcanvas_settings_defaults) do
+      offcanvas_settings[key] = get_offcanvas_option(key)
+    end
 
-  meta['extensions'] = meta['extensions'] or {}
-  meta['extensions']['offcanvas'] = meta['extensions']['offcanvas'] or {}
-  for key, value in pairs(offcanvas_settings) do
-    meta['extensions']['offcanvas'][key] = value
+    meta['extensions'] = meta['extensions'] or {}
+    meta['extensions']['offcanvas'] = meta['extensions']['offcanvas'] or {}
+    for key, value in pairs(offcanvas_settings) do
+      meta['extensions']['offcanvas'][key] = value
+    end
   end
 
   return meta
