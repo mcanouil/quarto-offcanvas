@@ -8,7 +8,7 @@ options:
   placement:
     type: string
     default: "start"
-    enum: [start, end, top, bottom]
+    enum: [start, end, top, bottom, left, right]
     enumCaseInsensitive: true
     description: "Default placement of the offcanvas panel. Aliases 'left' and 'right' are normalised to 'start' and 'end'."
   width:
@@ -92,9 +92,9 @@ attributes:
   offcanvas:
     placement:
       type: string
-      enum: [start, end, top, bottom]
+      enum: [start, end, top, bottom, left, right]
       enumCaseInsensitive: true
-      description: "Placement override for this offcanvas panel."
+      description: "Placement override for this offcanvas panel. Aliases 'left' and 'right' are normalised to 'start' and 'end'."
     width:
       type: string
       description: "Width override (for start/end placement)."

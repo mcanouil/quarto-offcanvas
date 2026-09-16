@@ -34,7 +34,6 @@ local ANIMATION_PRESETS = {
 --- Load required modules
 local str = require(quarto.utils.resolve_path('_vendor/quarto-lua-modules/string.lua'):gsub('%.lua$', ''))
 local log = require(quarto.utils.resolve_path('_vendor/quarto-lua-modules/logging.lua'):gsub('%.lua$', ''))
-local meta_mod = require(quarto.utils.resolve_path('_vendor/quarto-lua-modules/metadata.lua'):gsub('%.lua$', ''))
 local pdoc = require(quarto.utils.resolve_path('_vendor/quarto-lua-modules/pandoc-helpers.lua'):gsub('%.lua$', ''))
 local html_mod = require(quarto.utils.resolve_path('_vendor/quarto-lua-modules/html.lua'):gsub('%.lua$', ''))
 local content = require(quarto.utils.resolve_path('_vendor/quarto-lua-modules/content-extraction.lua'):gsub('%.lua$', ''))
@@ -98,17 +97,22 @@ local offcanvas_settings_defaults = {
 --- @type table<string, string>
 local offcanvas_settings = {}
 
---- Get offcanvas option from metadata
+--- Get offcanvas option from the schema-resolved configuration.
+--- The value comes from the schema rather than from the document text, so
+--- `scroll: no` reads as `false` here. Reading the document itself left every
+--- spelling but `true` and `false` meaning nothing.
+--- The rest of the filter compares these as strings, and writes them back into
+--- the metadata for a panel to override, so the resolved value is stringified
+--- rather than carried as a boolean.
+--- It must be called after `checker:options`, which resolves the values.
 --- @param key string The option name to retrieve
---- @param meta table Document metadata table
 --- @return string The option value as a string
-local function get_offcanvas_option(key, meta)
-  local meta_value = meta_mod.get_metadata_value(meta, 'offcanvas', key)
-  if not str.is_empty(meta_value) then
-    return meta_value
+local function get_offcanvas_option(key)
+  local value = checker:option(key)
+  if value == nil then
+    return offcanvas_settings_defaults[key] or ''
   end
-
-  return offcanvas_settings_defaults[key] or ''
+  return tostring(value)
 end
 
 --- Reset per-document state and load settings from document metadata.
@@ -118,16 +122,21 @@ local function get_offcanvas_meta(meta)
   offcanvas_count = 0
   js_helper_added = false
 
-  checker:options(meta)
+  -- The extension only acts on html:js with Bootstrap available, and
+  -- `get_offcanvas_option` requires `checker:options` to have run first, so
+  -- the whole block it feeds is gated the same way.
+  if quarto.doc.is_format('html:js') and quarto.doc.has_bootstrap() then
+    checker:options(meta)
 
-  for key, _ in pairs(offcanvas_settings_defaults) do
-    offcanvas_settings[key] = get_offcanvas_option(key, meta)
-  end
+    for key, _ in pairs(offcanvas_settings_defaults) do
+      offcanvas_settings[key] = get_offcanvas_option(key)
+    end
 
-  meta['extensions'] = meta['extensions'] or {}
-  meta['extensions']['offcanvas'] = meta['extensions']['offcanvas'] or {}
-  for key, value in pairs(offcanvas_settings) do
-    meta['extensions']['offcanvas'][key] = value
+    meta['extensions'] = meta['extensions'] or {}
+    meta['extensions']['offcanvas'] = meta['extensions']['offcanvas'] or {}
+    for key, value in pairs(offcanvas_settings) do
+      meta['extensions']['offcanvas'][key] = value
+    end
   end
 
   return meta
@@ -213,6 +222,9 @@ local function parse_auto_dismiss(value)
 end
 
 --- Resolve the animation preset to a CSS transition duration.
+--- Shared by `process_offcanvas` and `convert_margin_to_offcanvas`, both of
+--- which now read `animation` through the schema, so an invalid value is
+--- already named once by the caller before this function ever sees it.
 --- @param value string Animation preset name or empty
 --- @return string|nil Resolved CSS duration, or nil if no animation requested
 local function resolve_animation(value)
@@ -222,8 +234,6 @@ local function resolve_animation(value)
 
   local duration = ANIMATION_PRESETS[value]
   if not duration then
-    log.log_warning(EXTENSION_NAME,
-      'Invalid animation preset "' .. value .. '". Expected one of: none, fast, normal, slow. Ignoring.')
     return nil
   end
 
@@ -272,21 +282,21 @@ local function ensure_js_helper()
 end
 
 --- Validate shared offcanvas options and resolve derived behaviours.
---- Warns and coerces invalid `backdrop` and `trigger_type` values, resolves the
+--- Coerces invalid `backdrop` and `trigger_type` values, resolves the
 --- animation preset and auto-dismiss timeout, and registers the JS helper when
 --- an auto-dismiss timeout is set.
+--- Shared by `process_offcanvas` and `convert_margin_to_offcanvas`, both of
+--- which now read `backdrop` and `trigger-type` through the schema, so an
+--- invalid value is already named once by the caller before this function
+--- ever sees it; it only applies the fallback.
 --- @param opts table Mutable options table with `backdrop`, `trigger_type`, `animation`, `auto_dismiss` keys
 --- @return string|nil animation_duration, integer|nil auto_dismiss_ms
 local function validate_and_resolve_options(opts)
   if not VALID_BACKDROPS[opts.backdrop] then
-    log.log_warning(EXTENSION_NAME,
-      'Invalid backdrop "' .. opts.backdrop .. '". Expected "true", "false", or "static". Using "true".')
     opts.backdrop = 'true'
   end
 
   if not VALID_TRIGGER_TYPES[opts.trigger_type] then
-    log.log_warning(EXTENSION_NAME,
-      'Invalid trigger-type "' .. opts.trigger_type .. '". Expected "button" or "text". Using "button".')
     opts.trigger_type = 'button'
   end
 
@@ -345,12 +355,8 @@ local function generate_offcanvas_structure(config)
 
   local offcanvas_classes = { 'offcanvas', 'offcanvas-' .. placement }
 
-  if responsive and responsive ~= '' then
-    if VALID_RESPONSIVE[responsive] then
-      table.insert(offcanvas_classes, 'offcanvas-' .. responsive)
-    else
-      log.log_warning(EXTENSION_NAME, 'Invalid responsive breakpoint "' .. responsive .. '". Ignoring.')
-    end
+  if responsive and responsive ~= '' and VALID_RESPONSIVE[responsive] then
+    table.insert(offcanvas_classes, 'offcanvas-' .. responsive)
   end
 
   local offcanvas_attrs = {
@@ -508,6 +514,24 @@ end
 -- OFFCANVAS FILTER
 -- ============================================================================
 
+--- Resolve a schema-checked, boolean-typed attribute against its document
+--- fallback, without losing an explicit `false` to Lua's `or` operator.
+--- A value the schema accepted comes back as a real Lua boolean here, so it
+--- is stringified before the rest of the filter compares it as text; a value
+--- the schema rejected comes back as the original string, unchanged.
+--- @param value boolean|string|nil Resolved attribute value
+--- @param fallback string Document-level fallback
+--- @return string
+local function resolved_bool_or(value, fallback)
+  if value == nil then
+    return fallback
+  end
+  if type(value) == 'boolean' then
+    return tostring(value)
+  end
+  return value
+end
+
 --- Filter for Divs with class 'offcanvas'
 --- @param el pandoc.Div Pandoc Div element
 --- @return pandoc.Div|pandoc.Null Pandoc Div structure for offcanvas, or Null if not applicable
@@ -516,30 +540,31 @@ local function process_offcanvas(el)
     return el
   end
 
+  local resolved = checker:attributes(el.attributes, 'offcanvas')
+
   local offcanvas_id = el.identifier ~= '' and el.identifier or unique_offcanvas_id()
 
-  local placement = el.attributes.placement or offcanvas_settings.placement
-  local width = el.attributes.width or offcanvas_settings.width
-  local height = el.attributes.height or offcanvas_settings.height
-  local backdrop = el.attributes.backdrop or offcanvas_settings.backdrop
-  local scroll = el.attributes.scroll or offcanvas_settings.scroll
-  local keyboard = el.attributes.keyboard or offcanvas_settings.keyboard
-  local trigger_text = el.attributes['trigger-text'] or offcanvas_settings['trigger-text']
-  local trigger_class = el.attributes['trigger-class'] or offcanvas_settings['trigger-class']
-  local trigger_icon = el.attributes['trigger-icon'] or offcanvas_settings['trigger-icon']
-  local trigger_position = el.attributes['trigger-position'] or offcanvas_settings['trigger-position']
-  local trigger_type = el.attributes['trigger-type'] or offcanvas_settings['trigger-type']
-  local trigger_style = el.attributes['trigger-style'] or offcanvas_settings['trigger-style']
-  local show_close = el.attributes['show-close'] or offcanvas_settings['show-close']
-  local responsive = el.attributes.responsive or offcanvas_settings.responsive
-  local animation = el.attributes.animation or offcanvas_settings.animation
-  local auto_dismiss = el.attributes['auto-dismiss'] or offcanvas_settings['auto-dismiss']
-  local title_override = el.attributes.title
+  local placement = resolved.placement or offcanvas_settings.placement
+  local width = resolved.width or offcanvas_settings.width
+  local height = resolved.height or offcanvas_settings.height
+  local backdrop = resolved.backdrop or offcanvas_settings.backdrop
+  local scroll = resolved_bool_or(resolved.scroll, offcanvas_settings.scroll)
+  local keyboard = resolved_bool_or(resolved.keyboard, offcanvas_settings.keyboard)
+  local trigger_text = resolved['trigger-text'] or offcanvas_settings['trigger-text']
+  local trigger_class = resolved['trigger-class'] or offcanvas_settings['trigger-class']
+  local trigger_icon = resolved['trigger-icon'] or offcanvas_settings['trigger-icon']
+  local trigger_position = resolved['trigger-position'] or offcanvas_settings['trigger-position']
+  local trigger_type = resolved['trigger-type'] or offcanvas_settings['trigger-type']
+  local trigger_style = resolved['trigger-style'] or offcanvas_settings['trigger-style']
+  local show_close = resolved_bool_or(resolved['show-close'], offcanvas_settings['show-close'])
+  local responsive = resolved.responsive or offcanvas_settings.responsive
+  local animation = resolved.animation or offcanvas_settings.animation
+  local auto_dismiss = resolved['auto-dismiss'] or offcanvas_settings['auto-dismiss']
+  local title_override = resolved.title
 
   placement = normalise_placement(placement)
 
   if not VALID_PLACEMENTS[placement] then
-    log.log_warning(EXTENSION_NAME, 'Invalid placement "' .. placement .. '". Using "start".')
     placement = 'start'
   end
 
@@ -580,7 +605,6 @@ local function process_offcanvas(el)
   })
 
   if not VALID_TRIGGER_POSITIONS[trigger_position] then
-    log.log_warning(EXTENSION_NAME, 'Invalid trigger-position "' .. trigger_position .. '". Using "inline".')
     trigger_position = 'inline'
   end
 
@@ -626,24 +650,30 @@ local function convert_margin_to_offcanvas(el)
     return el
   end
 
+  local resolved = checker:attributes(el.attributes, 'offcanvas')
+
   local offcanvas_id = el.identifier ~= '' and el.identifier or unique_offcanvas_id()
 
-  local placement = el.attributes.placement or offcanvas_settings.placement
-  local width = el.attributes.width or offcanvas_settings.width
-  local height = el.attributes.height or offcanvas_settings.height
-  local backdrop = el.attributes.backdrop or offcanvas_settings.backdrop
-  local scroll = el.attributes.scroll or offcanvas_settings.scroll
-  local keyboard = el.attributes.keyboard or offcanvas_settings.keyboard
-  local trigger_class = el.attributes['trigger-class'] or offcanvas_settings['trigger-class']
-  local trigger_icon = el.attributes['trigger-icon'] or offcanvas_settings['trigger-icon']
-  local trigger_type = el.attributes['trigger-type'] or offcanvas_settings['trigger-type']
-  local trigger_style = el.attributes['trigger-style'] or offcanvas_settings['trigger-style']
-  local show_close = el.attributes['show-close'] or offcanvas_settings['show-close']
-  local animation = el.attributes.animation or offcanvas_settings.animation
-  local auto_dismiss = el.attributes['auto-dismiss'] or offcanvas_settings['auto-dismiss']
-  local title_override = el.attributes.title
+  local placement = resolved.placement or offcanvas_settings.placement
+  local width = resolved.width or offcanvas_settings.width
+  local height = resolved.height or offcanvas_settings.height
+  local backdrop = resolved.backdrop or offcanvas_settings.backdrop
+  local scroll = resolved_bool_or(resolved.scroll, offcanvas_settings.scroll)
+  local keyboard = resolved_bool_or(resolved.keyboard, offcanvas_settings.keyboard)
+  local trigger_class = resolved['trigger-class'] or offcanvas_settings['trigger-class']
+  local trigger_icon = resolved['trigger-icon'] or offcanvas_settings['trigger-icon']
+  local trigger_type = resolved['trigger-type'] or offcanvas_settings['trigger-type']
+  local trigger_style = resolved['trigger-style'] or offcanvas_settings['trigger-style']
+  local show_close = resolved_bool_or(resolved['show-close'], offcanvas_settings['show-close'])
+  local animation = resolved.animation or offcanvas_settings.animation
+  local auto_dismiss = resolved['auto-dismiss'] or offcanvas_settings['auto-dismiss']
+  local title_override = resolved.title
 
   placement = normalise_placement(placement)
+
+  if not VALID_PLACEMENTS[placement] then
+    placement = 'start'
+  end
 
   local opts = {
     backdrop = backdrop,
@@ -655,7 +685,7 @@ local function convert_margin_to_offcanvas(el)
   backdrop = opts.backdrop
   trigger_type = opts.trigger_type
 
-  local trigger_text = el.attributes['trigger-text']
+  local trigger_text = resolved['trigger-text']
   if not trigger_text or trigger_text == '' then
     trigger_text = 'View margin content'
     if el.content and #el.content > 0 then
