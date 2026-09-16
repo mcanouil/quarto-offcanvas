@@ -666,6 +666,10 @@ local function convert_margin_to_offcanvas(el)
 
   placement = normalise_placement(placement)
 
+  if not VALID_PLACEMENTS[placement] then
+    placement = 'start'
+  end
+
   local opts = {
     backdrop = backdrop,
     trigger_type = trigger_type,
