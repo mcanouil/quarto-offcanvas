@@ -5,6 +5,10 @@
 ### Bug Fixes
 
 - fix: Read the options through the schema, so a value that is not a boolean is reported rather than ignored. Comparing the document text accepted `true` and `false` only, and every other spelling was dropped without a word. (#43)
+- fix: Read the offcanvas attributes through the schema, so a value it rejects is named once and an explicit scroll="false", keyboard="false" or show-close="false" is no longer at risk of being silently dropped. scroll="TRUE" and show-close="TRUE" now switch the setting on, the same way "true" always has. (#43)
+- fix: Allow the "left" and "right" placement aliases in the schema, so a documented, working value is no longer reported as invalid. (#43)
+- fix: Fall back to the same "start" placement on a margin panel that an invalid value already falls back to on an ordinary offcanvas panel, instead of writing the invalid value straight into the emitted class name. (#43)
+- fix: Gate the options check on html:js with Bootstrap so non-acting formats stay silent. (#43)
 
 ### Documentation
 
