@@ -9,6 +9,7 @@
 - fix: Allow the "left" and "right" placement aliases in the schema, so a documented, working value is no longer reported as invalid. (#43)
 - fix: Fall back to the same "start" placement on a margin panel that an invalid value already falls back to on an ordinary offcanvas panel, instead of writing the invalid value straight into the emitted class name. (#43)
 - fix: Gate the options check on html:js with Bootstrap so non-acting formats stay silent. (#43)
+- fix: Report a key nested inside an option as a warning rather than an error, so one nested typo does not invalidate the whole configuration. This matches how the extension already reports an unknown key at the top of its own block. (#43)
 
 ### Documentation
 
@@ -18,7 +19,7 @@
 
 - build: Update the vendored Lua modules to 2.3.0, which includes the `schema-check` fix for an extension whose entry points are in a subdirectory. A module no longer carries a version line in its header, so its checksum changes only when its code changes. (#41)
 - build: Fetch the schema validator from a Quarto Wizard release asset rather than a raw path inside its repository, which a refactor could move without notice. The vendored file is unchanged. (#42)
-- build: Update the vendored Lua modules to 2.5.0, which adds the accessor that reads what the schema resolves an option to. The schema validator moves to its own release train and is pinned at `schema-v2.1.0`, which accepts only `true` and `false` as a boolean. The extension no longer vendors `metadata.lua`. (#43)
+- build: Update the vendored Lua modules to 2.5.0, which adds the accessor that reads what the schema resolves an option to. The schema validator moves to its own release train and is pinned at `schema-v2.2.0`, which accepts only `true` and `false` as a boolean. The extension no longer vendors `metadata.lua`. (#43)
 
 ## 1.4.0 (2026-09-07)
 
