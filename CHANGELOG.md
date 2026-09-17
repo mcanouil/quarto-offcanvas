@@ -14,6 +14,7 @@
 ### Documentation
 
 - docs: Serve the extension's social card as the Open Graph image, so a shared link shows the card rather than the first image on the page. (#40)
+- docs: Add worked examples for the panel title, the close button, the trigger icon, and a trigger with no classes.
 
 ### Refactoring
 
