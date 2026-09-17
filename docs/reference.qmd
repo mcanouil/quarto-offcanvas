@@ -160,4 +160,5 @@ The breakpoints follow Bootstrap's own: 576, 768, 992, 1200, and 1400 pixels.
 
 - HTML with Bootstrap 5 only.
 - A panel takes its title from a heading or the `title` attribute; without either the header is empty.
+  The panel still points at the missing title with `aria-labelledby`, so it has no accessible name.
 - `auto-dismiss` is measured from the moment the panel opens, not from the page load.
