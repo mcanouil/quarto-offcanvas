@@ -31,12 +31,15 @@ The footer.
 
 | Part | Comes from |
 | --- | --- |
-| Title | The first heading, or the `title` attribute. |
+| Title | The first heading at any level, or the `title` attribute. |
 | Body | Everything up to the first horizontal rule. |
 | Footer | Everything after it, when there is one. |
 | Trigger | Written by the extension, unless `trigger-position="none"`. |
 
 : How the div is divided. {.striped .hover tbl-colwidths="[16,84]"}
+
+The heading level does not reach the output.
+The extension reads the text of the first heading and removes it from the body, so `#` and `##` give the same panel.
 
 ## Panel attributes
 
