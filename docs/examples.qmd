@@ -22,7 +22,7 @@ extensions:
 
 :::: {.offcanvas placement="start" trigger-text="From the start"}
 
-# From the start
+## From the start
 
 `placement="start"`, which is the left edge in a left-to-right document.
 
@@ -30,7 +30,7 @@ extensions:
 
 :::: {.offcanvas placement="end" trigger-text="From the end"}
 
-# From the end
+## From the end
 
 `placement="end"`, the site default.
 
@@ -38,7 +38,7 @@ extensions:
 
 :::: {.offcanvas placement="top" height="220px" trigger-text="From the top"}
 
-# From the top
+## From the top
 
 `placement="top"` with `height="220px"`, since a top panel is sized by height rather than width.
 
@@ -46,7 +46,7 @@ extensions:
 
 :::: {.offcanvas placement="bottom" height="220px" trigger-text="From the bottom"}
 
-# From the bottom
+## From the bottom
 
 `placement="bottom"`, again sized by `height`.
 
@@ -63,7 +63,7 @@ A horizontal rule separates the footer from the body.
 
 :::: {.offcanvas trigger-text="With a footer" width="480px"}
 
-# Details
+## Details
 
 The body of the panel, written as ordinary markdown.
 
@@ -77,7 +77,7 @@ The body of the panel, written as ordinary markdown.
 ````markdown
 :::: {.offcanvas trigger-text="With a footer" width="480px"}
 
-# Details
+## Details
 
 The body.
 
@@ -89,11 +89,45 @@ The body.
 ::::
 ````
 
+## The header
+
+The first heading in the div becomes the title, and the extension writes it as the panel's `offcanvas-title`.
+The `title` attribute replaces that text.
+The heading is taken out of the body either way, so the body starts at the paragraph below it.
+
+:::: {.offcanvas title="Settings" trigger-text="A title of its own"}
+
+## This heading is not shown
+
+`title="Settings"` supplied the header text, and this heading was still removed from the body.
+
+::::
+
+`show-close="false"` leaves the close button out of the header.
+The backdrop and <kbd>Esc</kbd> still close the panel, because both stay on by default.
+
+:::: {.offcanvas show-close="false" trigger-text="No close button"}
+
+## No close button
+
+`show-close="false"`, so the header carries the title alone.
+Click outside the panel, or press <kbd>Esc</kbd>, to close it.
+
+::::
+
+```markdown
+:::: {.offcanvas title="Settings" trigger-text="A title of its own"}
+:::: {.offcanvas show-close="false" trigger-text="No close button"}
+```
+
+The title is also the panel's accessible name, since the panel points at it with `aria-labelledby`.
+A panel with neither a heading nor a `title` has no accessible name, which [Limitations](reference.qmd#limitations) records.
+
 ## Backdrop, scrolling, and the keyboard
 
 :::: {.offcanvas backdrop="static" keyboard="false" trigger-text="Static backdrop"}
 
-# Static backdrop
+## Static backdrop
 
 `backdrop="static"` keeps this open when the backdrop is clicked, and `keyboard="false"` stops <kbd>Esc</kbd> closing it.
 The close button is the way out.
@@ -102,7 +136,7 @@ The close button is the way out.
 
 :::: {.offcanvas backdrop="false" scroll="true" trigger-text="No backdrop"}
 
-# No backdrop
+## No backdrop
 
 `backdrop="false"` and `scroll="true"`, so the page behind stays readable and scrollable.
 
@@ -114,7 +148,7 @@ The close button is the way out.
 
 :::: {.offcanvas trigger-type="text" trigger-text="A text trigger" trigger-class="text-primary" trigger-style="text-decoration: underline;"}
 
-# A text trigger
+## A text trigger
 
 The built-in `cursor: pointer` is kept alongside the style above rather than replaced by it.
 
@@ -128,7 +162,7 @@ A `.offcanvas-trigger` child supplies arbitrary markdown instead, and wins over 
 **Open** the panel for *details*.
 :::
 
-# A custom trigger
+## A custom trigger
 
 The trigger above came from a nested `.offcanvas-trigger` div.
 
@@ -138,7 +172,7 @@ With `trigger-position="none"` no trigger is written, and you place your own:
 
 :::: {#manual-panel .offcanvas trigger-position="none"}
 
-# A panel with no trigger of its own
+## A panel with no trigger of its own
 
 Opened from a link elsewhere in the document.
 
@@ -148,17 +182,78 @@ Opened from a link elsewhere in the document.
 
 ```markdown
 :::: {#manual-panel .offcanvas trigger-position="none"}
-# A panel with no trigger of its own
+## A panel with no trigger of its own
 ::::
 
 [Open the manual panel](#manual-panel){bs-toggle="offcanvas"}
 ```
 
+## An icon on the trigger
+
+`trigger-icon` puts an `<i>` element carrying the given classes in front of the trigger text.
+This site loads Bootstrap Icons, so a `bi bi-*` class draws an icon here.
+
+:::: {.offcanvas trigger-icon="bi bi-gear" trigger-text="Settings"}
+
+## Settings
+
+`trigger-icon="bi bi-gear"`, which the extension writes as `<i class="bi bi-gear"></i>` before the text.
+
+::::
+
+A text trigger takes an icon the same way.
+
+:::: {.offcanvas trigger-icon="bi bi-info-circle" trigger-text="More about this" trigger-type="text" trigger-class="text-primary"}
+
+## More about this
+
+The icon sits inside the span rather than inside a button.
+
+::::
+
+```markdown
+:::: {.offcanvas trigger-icon="bi bi-gear" trigger-text="Settings"}
+:::: {.offcanvas trigger-icon="bi bi-info-circle" trigger-text="More" trigger-type="text"}
+```
+
+The class has to match an icon font the document already loads, because the extension only writes the class.
+A [trigger of your own](reference.qmd#a-trigger-of-your-own) carries its own markup, and `trigger-icon` is not applied to it.
+
+## A trigger with no classes
+
+`trigger-class="none"`, or an empty string, writes the trigger with no `class` attribute at all.
+The button then keeps the styling the browser gives it.
+
+:::: {.offcanvas trigger-class="none" trigger-text="An unstyled button"}
+
+## An unstyled button
+
+`trigger-class="none"`, so no Bootstrap button class reaches this trigger.
+
+::::
+
+Pair it with `trigger-style` to dress the element yourself.
+
+:::: {.offcanvas trigger-class="none" trigger-style="border: 1px dashed currentColor; border-radius: 0.5rem; padding: 0.25rem 0.75rem; background: none;" trigger-text="Styled by hand"}
+
+## Styled by hand
+
+`trigger-class="none"` with `trigger-style`, so the inline CSS is the only styling the trigger has.
+
+::::
+
+```markdown
+:::: {.offcanvas trigger-class="none" trigger-text="An unstyled button"}
+:::: {.offcanvas trigger-class="none" trigger-style="border: 1px dashed currentColor;"}
+```
+
+Every trigger option is listed under [Trigger attributes](reference.qmd#trigger-attributes).
+
 ## Animation and auto-dismiss
 
 :::: {.offcanvas animation="fast" trigger-text="Fast slide"}
 
-# Fast slide
+## Fast slide
 
 `animation="fast"`, so the panel slides in over 150 milliseconds.
 
@@ -166,7 +261,7 @@ Opened from a link elsewhere in the document.
 
 :::: {.offcanvas auto-dismiss="3000" trigger-text="Closes itself"}
 
-# Closes itself
+## Closes itself
 
 `auto-dismiss="3000"`, so this closes three seconds after it opened.
 Dismissing it sooner cancels the timer.
