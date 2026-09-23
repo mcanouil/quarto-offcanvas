@@ -14,8 +14,8 @@
 ### Documentation
 
 - docs: Serve the extension's social card as the Open Graph image, so a shared link shows the card rather than the first image on the page. (#40)
-- docs: Record that a panel with no heading and no `title` has no accessible name.
-- docs: Add worked examples for the panel title, the close button, the trigger icon, and a trigger with no classes.
+- docs: Record that a panel with no heading and no `title` has no accessible name. (#44)
+- docs: Add worked examples for the panel title, the close button, the trigger icon, and a trigger with no classes. (#44)
 
 ### Refactoring
 
