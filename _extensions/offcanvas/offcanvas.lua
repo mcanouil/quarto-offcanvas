@@ -276,7 +276,6 @@ local function ensure_js_helper()
   js_helper_added = true
   html_mod.ensure_html_dependency({
     name = 'quarto-offcanvas-js',
-    version = '1.0.0',
     scripts = { 'offcanvas.js' }
   })
 end
@@ -763,7 +762,6 @@ end
 if quarto.doc.is_format('html:js') and quarto.doc.has_bootstrap() then
   html_mod.ensure_html_dependency({
     name = 'quarto-offcanvas',
-    version = '1.0.0',
     stylesheets = { 'offcanvas.css' }
   })
 end
